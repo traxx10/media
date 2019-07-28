@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Button, Header } from "react-native-elements";
-
+import Icon from "react-native-vector-icons/FontAwesome";
 class HomeScreen extends Component {
   render() {
     return (
