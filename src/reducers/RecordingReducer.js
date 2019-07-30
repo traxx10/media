@@ -1,9 +1,14 @@
-import { TOGGLE_FLASH, TOGGLE_CAMERA } from "../actions/types";
+import {
+  TOGGLE_FLASH,
+  TOGGLE_CAMERA,
+  ON_FACE_DETECTED
+} from "../actions/types";
 
 const INITIAL_STATE = {
   flash: false,
   frontCamera: false,
-  recording: true
+  recording: true,
+  faceDetectedDetails: null
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -13,6 +18,9 @@ export default (state = INITIAL_STATE, action) => {
 
     case TOGGLE_CAMERA:
       return { ...state, frontCamera: action.payload };
+
+    case ON_FACE_DETECTED:
+      return { ...state, faceDetectedDetails: action.payload };
     default:
       return state;
   }

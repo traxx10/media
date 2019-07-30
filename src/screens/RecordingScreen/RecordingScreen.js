@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Entypo from "react-native-vector-icons/Entypo";
 import Fontisto from "react-native-vector-icons/Fontisto";
-import { toggleFlash, toggleCamera } from "../../actions";
+import { toggleFlash, toggleCamera, onFaceDetected } from "../../actions";
 
 class RecordingScreen extends PureComponent {
   state = {
@@ -56,13 +56,39 @@ class RecordingScreen extends PureComponent {
     }
   };
 
+  renderFaceDetect = () => {
+    const { faceDetectedDetails } = this.props;
+
+    // console.log(faceDetectedDetails.length, "details");
+    if (faceDetectedDetails) {
+      let faceSize = faceDetectedDetails.faces[0].bounds.size;
+      let facePosition = faceDetectedDetails.faces[0].bounds.origin;
+
+      console.log(facePosition.y, facePosition.x, "sizes");
+      return (
+        <View
+          style={{
+            height: faceSize.height,
+            width: faceSize.width,
+            backgroundColor: "red",
+            position: "absolute",
+            top: facePosition.y,
+            left: facePosition.x
+          }}
+        />
+      );
+    } else {
+    }
+  };
+
   render() {
     const {
       flash,
       toggleFlash,
       recording,
       toggleCamera,
-      frontCamera
+      frontCamera,
+      onFaceDetected
     } = this.props;
     return (
       <View style={styles.container}>
@@ -133,6 +159,11 @@ class RecordingScreen extends PureComponent {
           onGoogleVisionBarcodesDetected={({ barcodes }) => {
             console.log(barcodes);
           }}
+          onFacesDetected={values => {
+            // console.log(values, "values");
+            onFaceDetected(values);
+          }}
+          faceDetectionMode={RNCamera.Constants.FaceDetection.Mode.accurate}
         />
         <View style={styles.footerContainer}>
           <View
@@ -171,6 +202,7 @@ class RecordingScreen extends PureComponent {
             />
           </View>
         </View>
+        {this.renderFaceDetect()}
       </View>
     );
   }
@@ -237,11 +269,12 @@ const mapStateToProps = state => {
   return {
     flash: state.RecordingReducer.flash,
     frontCamera: state.RecordingReducer.frontCamera,
-    recording: state.RecordingReducer.recording
+    recording: state.RecordingReducer.recording,
+    faceDetectedDetails: state.RecordingReducer.faceDetectedDetails
   };
 };
 
 export default connect(
   mapStateToProps,
-  { toggleFlash, toggleCamera }
+  { toggleFlash, toggleCamera, onFaceDetected }
 )(RecordingScreen);
