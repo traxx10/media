@@ -75,7 +75,9 @@ class RecordingScreen extends PureComponent {
             top: facePosition.y,
             left: facePosition.x
           }}
-        />
+        >
+          <Text>Filter image filters would be here </Text>
+        </View>
       );
     } else {
     }
