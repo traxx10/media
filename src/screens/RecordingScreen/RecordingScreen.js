@@ -4,8 +4,15 @@ import { RNCamera } from "react-native-camera";
 import { connect } from "react-redux";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Entypo from "react-native-vector-icons/Entypo";
+import Feather from "react-native-vector-icons/Feather";
 import Fontisto from "react-native-vector-icons/Fontisto";
-import { toggleFlash, toggleCamera, onFaceDetected } from "../../actions";
+import {
+  toggleFlash,
+  toggleCamera,
+  onFaceDetected,
+  startStopRecording,
+  VidCamData
+} from "../../actions";
 
 class RecordingScreen extends PureComponent {
   state = {
@@ -24,6 +31,9 @@ class RecordingScreen extends PureComponent {
 
   stopRecording() {
     this.camera.stopRecording();
+    this.props.navigation.navigate("Recorded", {
+      // name: "Brent"
+    });
   }
 
   renderFlashIcon = () => {};
@@ -53,6 +63,19 @@ class RecordingScreen extends PureComponent {
       const options = { quality: 0.5, base64: true };
       const data = await this.camera.takePictureAsync(options);
       console.log(data.uri);
+      this.props.VidCamData({ prop: "cameraData", value: data });
+      this.props.navigation.navigate("Recorded", {
+        // name: "Brent"
+      });
+    }
+  };
+
+  takeVideo = async () => {
+    if (this.camera) {
+      const options = { quality: "420px", maxDuration: 60 };
+      const data = await this.camera.recordAsync(options);
+      console.log(data.uri, "video");
+      this.props.VidCamData({ prop: "videoData", value: data });
     }
   };
 
@@ -73,7 +96,7 @@ class RecordingScreen extends PureComponent {
             backgroundColor: "red",
             position: "absolute",
             top: facePosition.y,
-            left: facePosition.x
+            left: facePosition.x - 70
           }}
         >
           <Text>Filter image filters would be here </Text>
@@ -90,7 +113,8 @@ class RecordingScreen extends PureComponent {
       recording,
       toggleCamera,
       frontCamera,
-      onFaceDetected
+      onFaceDetected,
+      startStopRecording
     } = this.props;
     return (
       <View style={styles.container}>
@@ -174,8 +198,30 @@ class RecordingScreen extends PureComponent {
               justifyContent: "center",
               alignItems: "flex-start"
             }}
-          />
-          <TouchableWithoutFeedback onPress={() => this.takePicture()}>
+          >
+            {recording ? (
+              <Feather
+                color="red"
+                name={"stop-circle"}
+                size={35}
+                onPress={() => {
+                  startStopRecording(recording);
+                  this.stopRecording();
+                }}
+              />
+            ) : null}
+          </View>
+          <TouchableWithoutFeedback
+            // onPress={() => this.takePicture()}
+            onPress={() => {
+              this.takeVideo();
+              startStopRecording(recording);
+            }}
+            onLongPress={() => {
+              this.takeVideo();
+              startStopRecording(recording);
+            }}
+          >
             <View
               style={{
                 flex: 1,
@@ -278,5 +324,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { toggleFlash, toggleCamera, onFaceDetected }
+  { toggleFlash, toggleCamera, onFaceDetected, startStopRecording, VidCamData }
 )(RecordingScreen);
