@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import Video from "react-native-video";
+import VideoPlayer from "react-native-video-controls";
 
 class RecordedScreen extends Component {
   constructor(props) {
@@ -123,6 +124,39 @@ class RecordedScreen extends Component {
 
   render() {
     const { videoData, cameraData } = this.props;
+
+    // return (
+    //   <View style={styles.container}>
+    //     {videoData ? (
+    //       <VideoPlayer
+    //         navigator={() => this.props.navigation.pop()}
+    //         source={{ uri: videoData.uri }} // Can be a URL or a local file.
+    //         ref={ref => {
+    //           this.video = ref;
+    //         }} // Store reference
+    //         onBuffer={this.onBuffer} // Callback when remote video is buffering
+    //         onError={this.videoError} // Callback when video cannot be loaded
+    //         style={styles.fullScreen}
+    //         rate={this.state.rate}
+    //         paused={this.state.paused}
+    //         volume={this.state.volume}
+    //         muted={this.state.muted}
+    //         resizeMode={this.state.resizeMode}
+    //         onLoad={this.onLoad}
+    //         onProgress={this.onProgress}
+    //         onEnd={this.onEnd}
+    //         onAudioBecomingNoisy={this.onAudioBecomingNoisy}
+    //         onAudioFocusChanged={this.onAudioFocusChanged}
+    //         repeat={false}
+    //         pictureInPicture={false}
+    //       />
+    //     ) : (
+    //       <View>
+    //         <Text> Hello World </Text>
+    //       </View>
+    //     )}
+    //   </View>
+    // );
     return (
       <View style={styles.container}>
         <TouchableWithoutFeedback
@@ -131,14 +165,6 @@ class RecordedScreen extends Component {
         >
           {videoData ? (
             <Video
-              // source={{
-              //   uri:
-              //     "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4"
-              // }}
-              //   source={{
-              //     uri:
-              //       "https://rawgit.com/uit2712/Mp3Container/master/tom_and_jerry_31.mp4"
-              //   }}
               source={{ uri: videoData.uri }} // Can be a URL or a local file.
               ref={ref => {
                 this.video = ref;

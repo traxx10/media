@@ -1,5 +1,11 @@
 import React, { PureComponent } from "react";
-import { View, Text, StyleSheet, TouchableWithoutFeedback } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  TouchableOpacity
+} from "react-native";
 import { RNCamera } from "react-native-camera";
 import { connect } from "react-redux";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -31,9 +37,7 @@ class RecordingScreen extends PureComponent {
 
   stopRecording() {
     this.camera.stopRecording();
-    this.props.navigation.navigate("Recorded", {
-      // name: "Brent"
-    });
+    this.props.navigation.navigate("Recorded", {});
   }
 
   renderFlashIcon = () => {};
@@ -60,13 +64,19 @@ class RecordingScreen extends PureComponent {
 
   takePicture = async () => {
     if (this.camera) {
-      const options = { quality: 0.5, base64: true };
+      const options = {
+        quality: 1,
+        base64: true,
+        fixOrientation: true,
+        forceUpOrientation: true
+      };
       const data = await this.camera.takePictureAsync(options);
       console.log(data.uri);
       this.props.VidCamData({ prop: "cameraData", value: data });
-      this.props.navigation.navigate("Recorded", {
-        // name: "Brent"
-      });
+      this.props.navigation.navigate("Preview");
+      // this.props.navigation.navigate("Recorded", {
+      //   // name: "Brent"
+      // });
     }
   };
 
@@ -83,27 +93,29 @@ class RecordingScreen extends PureComponent {
     const { faceDetectedDetails } = this.props;
 
     // console.log(faceDetectedDetails.length, "details");
-    if (faceDetectedDetails) {
-      let faceSize = faceDetectedDetails.faces[0].bounds.size;
-      let facePosition = faceDetectedDetails.faces[0].bounds.origin;
+    // if (faceDetectedDetails) {
+    //   let faceSize = faceDetectedDetails.faces[0].bounds.size;
+    //   let facePosition = faceDetectedDetails.faces[0].bounds.origin;
 
-      console.log(facePosition.y, facePosition.x, "sizes");
-      return (
-        <View
-          style={{
-            height: faceSize.height,
-            width: faceSize.width,
-            backgroundColor: "red",
-            position: "absolute",
-            top: facePosition.y,
-            left: facePosition.x - 70
-          }}
-        >
-          <Text>Filter image filters would be here </Text>
-        </View>
-      );
-    } else {
-    }
+    //   console.log(facePosition.y, facePosition.x, "sizes");
+    //   return (
+    //     <View
+    //       style={{
+    //         height: faceSize.height,
+    //         width: faceSize.width,
+    //         backgroundColor: "red",
+    //         position: "absolute",
+    //         top: facePosition.y,
+    //         left: facePosition.x - 70
+    //       }}
+    //     >
+    //       <Text>Filter image filters would be here </Text>
+    //     </View>
+    //   );
+    // } else {
+    // }
+
+    return null;
   };
 
   render() {
@@ -211,16 +223,17 @@ class RecordingScreen extends PureComponent {
               />
             ) : null}
           </View>
-          <TouchableWithoutFeedback
-            // onPress={() => this.takePicture()}
-            onPress={() => {
-              this.takeVideo();
-              startStopRecording(recording);
-            }}
+          <TouchableOpacity
+            onPress={() => this.takePicture()}
+            // onPress={() => {
+            //   this.takeVideo();
+            //   startStopRecording(recording);
+            // }}
             onLongPress={() => {
               this.takeVideo();
               startStopRecording(recording);
             }}
+            delayLongPress={1500}
           >
             <View
               style={{
@@ -232,7 +245,7 @@ class RecordingScreen extends PureComponent {
             >
               <View style={styles.recordButton} />
             </View>
-          </TouchableWithoutFeedback>
+          </TouchableOpacity>
           <View
             style={{
               flex: 1,

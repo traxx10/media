@@ -2,6 +2,7 @@ import { createStackNavigator, createAppContainer } from "react-navigation";
 import HomeScreen from "./screens/HomeScreen/HomeScreen";
 import RecordingScreen from "./screens/RecordingScreen/RecordingScreen";
 import RecordedScreen from "./screens/RecordedScreen/RecordedScreen";
+import PreviewScreen from "./screens/PreviewScreen/PreviewScreen";
 
 // const AppNavigator = createStackNavigator(
 //   {
@@ -40,6 +41,9 @@ const AppNavigator = createStackNavigator(
     },
     Recorded: {
       screen: RecordedScreen
+    },
+    Preview: {
+      screen: PreviewScreen
     }
   },
   {
