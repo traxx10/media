@@ -126,7 +126,9 @@ class RecordingScreen extends PureComponent {
       toggleCamera,
       frontCamera,
       onFaceDetected,
-      startStopRecording
+      startStopRecording,
+      cameraData,
+      videoData
     } = this.props;
     return (
       <View style={styles.container}>
@@ -224,14 +226,20 @@ class RecordingScreen extends PureComponent {
             ) : null}
           </View>
           <TouchableOpacity
-            onPress={() => this.takePicture()}
+            onPress={() => {
+              if (!videoData) {
+                this.takePicture();
+              }
+            }}
             // onPress={() => {
             //   this.takeVideo();
             //   startStopRecording(recording);
             // }}
             onLongPress={() => {
-              this.takeVideo();
-              startStopRecording(recording);
+              if (!cameraData) {
+                this.takeVideo();
+                startStopRecording(recording);
+              }
             }}
             delayLongPress={1500}
           >
@@ -331,7 +339,9 @@ const mapStateToProps = state => {
     flash: state.RecordingReducer.flash,
     frontCamera: state.RecordingReducer.frontCamera,
     recording: state.RecordingReducer.recording,
-    faceDetectedDetails: state.RecordingReducer.faceDetectedDetails
+    faceDetectedDetails: state.RecordingReducer.faceDetectedDetails,
+    videoData: state.RecordingReducer.videoData,
+    cameraData: state.RecordingReducer.cameraData
   };
 };
 

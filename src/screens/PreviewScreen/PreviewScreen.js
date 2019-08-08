@@ -3,7 +3,8 @@ import {
   Text,
   StyleSheet,
   Image,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  Alert
 } from "react-native";
 import React, { Component } from "react";
 import { Button, Avatar } from "react-native-elements";
@@ -11,6 +12,7 @@ import { Thumbnail } from "react-native-thumbnail-video";
 import { connect } from "react-redux";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Entypo from "react-native-vector-icons/Entypo";
+import { VidCamData } from "../../actions";
 
 class PreviewScreen extends Component {
   render() {
@@ -20,6 +22,10 @@ class PreviewScreen extends Component {
         <View style={styles.headerContainer}>
           <TouchableWithoutFeedback
             onPress={() => {
+              this.props.VidCamData({
+                prop: "cameraData",
+                value: null
+              });
               this.props.navigation.navigate("Record");
             }}
           >
@@ -64,6 +70,25 @@ class PreviewScreen extends Component {
               paddingHorizontal: 18
             }}
             titleStyle={{ color: "#fff" }}
+            onPress={() => {
+              Alert.alert(
+                "MEDIA",
+                "Submitted",
+                [
+                  {
+                    text: "OK",
+                    onPress: () => {
+                      this.props.VidCamData({
+                        prop: "cameraData",
+                        value: null
+                      });
+                      this.props.navigation.navigate("Record");
+                    }
+                  }
+                ],
+                { cancelable: false }
+              );
+            }}
           />
         </View>
         {cameraData ? (
@@ -163,4 +188,7 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(PreviewScreen);
+export default connect(
+  mapStateToProps,
+  { VidCamData }
+)(PreviewScreen);
