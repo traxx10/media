@@ -31,7 +31,13 @@ target 'media' do
 
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+  pod 'Firebase/Core'
    pod 'react-native-camera', path: '../node_modules/react-native-camera'
+   pod 'react-native-camera', path: '../node_modules/react-native-camera', subspecs: [
+  'TextDetector',
+  'FaceDetectorMLKit',
+  'BarcodeDetectorMLKit'
+]
 pod 'react-native-video', :path => '../node_modules/react-native-video/react-native-video.podspec'
 pod 'react-native-video/VideoCaching', :path => '../node_modules/react-native-video/react-native-video.podspec'
   target 'mediaTests' do
