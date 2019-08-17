@@ -4,7 +4,9 @@ import {
   Text,
   StyleSheet,
   TouchableWithoutFeedback,
-  TouchableOpacity
+  TouchableOpacity,
+  ImageBackground,
+  Image
 } from "react-native";
 import { RNCamera } from "react-native-camera";
 import { connect } from "react-redux";
@@ -132,6 +134,17 @@ class RecordingScreen extends PureComponent {
     } = this.props;
     return (
       <View style={styles.container}>
+        <Image
+          source={require("../../assets/stickers/sticker1.png")}
+          resizeMode="stretch"
+          style={{
+            width: "100%",
+            height: "100%",
+            flex: 1,
+            zIndex: 50,
+            position: "absolute"
+          }}
+        />
         <View style={styles.headerContainer}>
           <View
             style={{
@@ -271,7 +284,7 @@ class RecordingScreen extends PureComponent {
             />
           </View>
         </View>
-        {this.renderFaceDetect()}
+        {/* {this.renderFaceDetect()} */}
       </View>
     );
   }
@@ -282,6 +295,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     backgroundColor: "black"
+    // margin: 50
   },
   preview: {
     flex: 1,
