@@ -21,6 +21,7 @@ import {
   startStopRecording,
   VidCamData
 } from "../../actions";
+import Sticker1 from "../../assets/stickers/sticker1.svg";
 
 class RecordingScreen extends PureComponent {
   state = {
@@ -294,8 +295,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-    backgroundColor: "black"
-    // margin: 50
+    backgroundColor: "#000"
+    // paddingTop: 50,
+    // paddingBottom: 50
   },
   preview: {
     flex: 1,

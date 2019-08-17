@@ -15,7 +15,7 @@ import HomeScreen from "./src/screens/HomeScreen/HomeScreen";
 
 const App = () => {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#000" }}>
       <Provider store={store}>
         <Navigation />
       </Provider>

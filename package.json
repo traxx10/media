@@ -15,6 +15,7 @@
     "react-native-elements": "^1.1.0",
     "react-native-fs": "^2.14.1",
     "react-native-gesture-handler": "^1.3.0",
+    "react-native-svg": "^9.6.4",
     "react-native-thumbnail-video": "^0.1.2",
     "react-native-timer": "^1.3.6",
     "react-native-vector-icons": "^6.6.0",
@@ -36,6 +37,7 @@
     "eslint": "^6.1.0",
     "jest": "^24.8.0",
     "metro-react-native-babel-preset": "^0.55.0",
+    "react-native-svg-transformer": "^0.13.0",
     "react-test-renderer": "16.8.6"
   },
   "jest": {
