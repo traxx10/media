@@ -24,12 +24,13 @@ import {
   toggleFilterPreview
 } from "../../actions";
 import Sticker1 from "../../assets/stickers/sticker1.svg";
+import FilterPreview from "../../components/FilterPreview/FilterPreview";
 
 class RecordingScreen extends PureComponent {
   state = {
     recording: false,
     processing: false,
-    filterMenu: true
+    filterMenu: false
   };
 
   async startRecording() {
@@ -271,6 +272,9 @@ class RecordingScreen extends PureComponent {
           }}
           faceDetectionMode={RNCamera.Constants.FaceDetection.Mode.accurate}
         />
+        <View style={styles.filterContainer}>
+          <FilterPreview />
+        </View>
         <View style={styles.footerContainer}>
           <View
             style={{
@@ -388,10 +392,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 15,
     paddingVertical: 15,
+    paddingBottom: "15%",
+    zIndex: 100
+  },
+  filterContainer: {
+    position: "absolute",
+    bottom: 60,
+    left: 0,
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 15,
+    paddingVertical: 15,
     paddingBottom: "22%",
     zIndex: 100
   },
-
   recordButton: {
     height: 65,
     width: 65,
