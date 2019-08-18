@@ -13,8 +13,17 @@ import { connect } from "react-redux";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Entypo from "react-native-vector-icons/Entypo";
 import { VidCamData } from "../../actions";
+import MovableView from "react-native-movable-view";
 
 class PreviewScreen extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      moveable: true
+    };
+  }
+
   render() {
     const { cameraData, videoData } = this.props;
     return (
@@ -72,35 +81,41 @@ class PreviewScreen extends Component {
           />
         </View>
         <View style={styles.buttonContainer}>
-          <Button
-            title="Submit"
-            type="solid"
-            buttonStyle={{
-              borderRadius: 100,
-              backgroundColor: "#999",
-              paddingHorizontal: 18
-            }}
-            titleStyle={{ color: "#fff" }}
-            onPress={() => {
-              Alert.alert(
-                "MEDIA",
-                "Submitted",
-                [
-                  {
-                    text: "OK",
-                    onPress: () => {
-                      this.props.VidCamData({
-                        prop: "cameraData",
-                        value: null
-                      });
-                      this.props.navigation.navigate("Record");
-                    }
-                  }
-                ],
-                { cancelable: false }
-              );
-            }}
-          />
+          {this.state.moveable ? (
+            <MovableView onDragEnd={() => this.setState({ moveable: false })}>
+              <Button
+                title="Submit"
+                type="solid"
+                buttonStyle={{
+                  borderRadius: 100,
+                  backgroundColor: "#999",
+                  paddingHorizontal: 18
+                }}
+                titleStyle={{ color: "#fff" }}
+                onPress={() => {
+                  Alert.alert(
+                    "MEDIA",
+                    "Submitted",
+                    [
+                      {
+                        text: "OK",
+                        onPress: () => {
+                          this.props.VidCamData({
+                            prop: "cameraData",
+                            value: null
+                          });
+                          this.props.navigation.navigate("Record");
+                        }
+                      }
+                    ],
+                    { cancelable: false }
+                  );
+                }}
+                onLongPress={() => this.setState({ moveable: true })}
+                containerStyle={{ zIndex: 150 }}
+              />
+            </MovableView>
+          ) : null}
         </View>
         {cameraData ? (
           <Image
@@ -120,22 +135,26 @@ class PreviewScreen extends Component {
           </View>
         )}
         <View style={styles.footerContainer}>
-          <View style={{ flexDirection: "row" }}>
-            <Avatar
-              rounded
-              source={{
-                uri:
-                  "https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg"
-              }}
-              size={55}
-            />
-            <View style={{ marginLeft: 12 }}>
-              <Text style={styles.userData}> @robJones</Text>
-              <Text style={styles.userData}> Inverness, Scotland</Text>
-              <Text style={styles.userData}> 07 June 2019</Text>
-              <Text style={styles.userData}> 14:35 </Text>
+          <TouchableWithoutFeedback
+            onPress={() => this.setState({ moveable: true })}
+          >
+            <View style={{ flexDirection: "row" }}>
+              <Avatar
+                rounded
+                source={{
+                  uri:
+                    "https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg"
+                }}
+                size={55}
+              />
+              <View style={{ marginLeft: 12 }}>
+                <Text style={styles.userData}> @robJones</Text>
+                <Text style={styles.userData}> Inverness, Scotland</Text>
+                <Text style={styles.userData}> 07 June 2019</Text>
+                <Text style={styles.userData}> 14:35 </Text>
+              </View>
             </View>
-          </View>
+          </TouchableWithoutFeedback>
         </View>
       </View>
     );
