@@ -19,6 +19,17 @@ class PreviewScreen extends Component {
     const { cameraData, videoData } = this.props;
     return (
       <View style={styles.container}>
+        {/* <Image
+          source={require("../../assets/stickers/sticker1.png")}
+          resizeMode="stretch"
+          style={{
+            width: "100%",
+            height: "100%",
+            flex: 1,
+            zIndex: 50,
+            position: "absolute"
+          }}
+        /> */}
         <View style={styles.headerContainer}>
           <TouchableWithoutFeedback
             onPress={() => {

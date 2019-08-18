@@ -28,12 +28,12 @@ import PreviewScreen from "./screens/PreviewScreen/PreviewScreen";
 
 const AppNavigator = createStackNavigator(
   {
-    Home: {
-      screen: HomeScreen,
-      navigationOptions: ({ navigation }) => ({
-        title: `Home Screen`
-      })
-    },
+    // Home: {
+    //   screen: HomeScreen,
+    //   navigationOptions: ({ navigation }) => ({
+    //     title: `Home Screen`
+    //   })
+    // },
     Record: {
       screen: RecordingScreen,
 

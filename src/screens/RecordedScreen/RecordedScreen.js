@@ -1,13 +1,10 @@
 import React, { Component } from "react";
 import {
-  Platform,
   StyleSheet,
   Text,
   View,
   TouchableWithoutFeedback,
-  Picker,
-  ToastAndroid,
-  ProgressBarAndroid,
+  Image,
   Alert
 } from "react-native";
 import { connect } from "react-redux";
@@ -209,31 +206,44 @@ class RecordedScreen extends Component {
           </View>
         ) : null}
         {videoData ? (
-          <VideoPlayer
-            // navigator={() => this.props.navigation.pop()}
-            onBack={() => this.props.navigation.navigate("Record")}
-            source={{ uri: videoData.uri }} // Can be a URL or a local file.
-            ref={ref => {
-              this.video = ref;
-            }} // Store reference
-            onBuffer={this.onBuffer} // Callback when remote video is buffering
-            onError={this.videoError} // Callback when video cannot be loaded
-            style={styles.fullScreen}
-            paused={paused}
-            disableSeekbar
-            // resizeMode={this.state.resizeMode}
-            onLoad={this.onLoad}
-            onEnd={this.onEnd}
-            repeat={false}
-            disableVolume
-            disableBack
-            onPlay={() => {
-              this.setState({ paused: false });
-            }}
-            onPause={() => {
-              this.setState({ paused: true });
-            }}
-          />
+          <View>
+            <VideoPlayer
+              // navigator={() => this.props.navigation.pop()}
+              onBack={() => this.props.navigation.navigate("Record")}
+              source={{ uri: videoData.uri }} // Can be a URL or a local file.
+              ref={ref => {
+                this.video = ref;
+              }} // Store reference
+              onBuffer={this.onBuffer} // Callback when remote video is buffering
+              onError={this.videoError} // Callback when video cannot be loaded
+              style={styles.fullScreen}
+              paused={paused}
+              disableSeekbar
+              // resizeMode={this.state.resizeMode}
+              onLoad={this.onLoad}
+              onEnd={this.onEnd}
+              repeat={false}
+              disableVolume
+              disableBack
+              onPlay={() => {
+                this.setState({ paused: false });
+              }}
+              onPause={() => {
+                this.setState({ paused: true });
+              }}
+            />
+            <Image
+              source={require("../../assets/stickers/sticker1.png")}
+              resizeMode="stretch"
+              style={{
+                width: "100%",
+                height: "100%",
+                flex: 1,
+                zIndex: 50,
+                position: "absolute"
+              }}
+            />
+          </View>
         ) : (
           <View>
             <Text> Loading </Text>
@@ -361,7 +371,10 @@ const styles = StyleSheet.create({
     backgroundColor: "white"
   },
   fullScreen: {
-    position: "relative"
+    position: "relative",
+    flex: 1,
+    width: "100%",
+    height: "100%"
     // position: "absolute",
     // top: 0,
     // left: 0,

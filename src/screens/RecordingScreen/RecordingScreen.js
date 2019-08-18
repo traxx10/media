@@ -14,19 +14,22 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import Entypo from "react-native-vector-icons/Entypo";
 import Feather from "react-native-vector-icons/Feather";
 import Fontisto from "react-native-vector-icons/Fontisto";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import {
   toggleFlash,
   toggleCamera,
   onFaceDetected,
   startStopRecording,
-  VidCamData
+  VidCamData,
+  toggleFilterPreview
 } from "../../actions";
 import Sticker1 from "../../assets/stickers/sticker1.svg";
 
 class RecordingScreen extends PureComponent {
   state = {
     recording: false,
-    processing: false
+    processing: false,
+    filterMenu: true
   };
 
   async startRecording() {
@@ -121,6 +124,45 @@ class RecordingScreen extends PureComponent {
     return null;
   };
 
+  renderFilterMenu = () => {
+    const { filterMenu } = this.state;
+    const { toggleFilterPreview } = this.props;
+    if (!filterMenu) {
+      return null;
+    } else {
+      return (
+        <View
+          style={{
+            flexDirection: "column",
+            justifyContent: "flex-start",
+            alignItems: "flex-start",
+            position: "absolute",
+            flex: 1,
+            top: 50,
+            marginTop: 20,
+            right: 15,
+            zIndex: 120
+          }}
+        >
+          <FontAwesome5
+            onPress={() => toggleFilterPreview("news")}
+            name="user-tie"
+            color="green"
+            size={20}
+            style={{ marginBottom: 25 }}
+          />
+          <Entypo
+            onPress={() => toggleFilterPreview("interview")}
+            name="modern-mic"
+            color="red"
+            size={20}
+            style={{ marginBottom: 20 }}
+          />
+        </View>
+      );
+    }
+  };
+
   render() {
     const {
       flash,
@@ -131,11 +173,12 @@ class RecordingScreen extends PureComponent {
       onFaceDetected,
       startStopRecording,
       cameraData,
-      videoData
+      videoData,
+      toggleFilterPreview
     } = this.props;
     return (
       <View style={styles.container}>
-        <Image
+        {/* <Image
           source={require("../../assets/stickers/sticker1.png")}
           resizeMode="stretch"
           style={{
@@ -145,7 +188,7 @@ class RecordingScreen extends PureComponent {
             zIndex: 50,
             position: "absolute"
           }}
-        />
+        /> */}
         <View style={styles.headerContainer}>
           <View
             style={{
@@ -180,17 +223,26 @@ class RecordingScreen extends PureComponent {
             style={{
               flex: 1,
               justifyContent: "center",
-              alignItems: "flex-end"
+              alignItems: "flex-end",
+              flexDirection: "column",
+              position: "relative"
             }}
           >
             <Ionicons
               color="#fff"
               name="md-menu"
               size={25}
-              // onPress={() => toggleFlash(flash)}
+              onPress={() => {
+                this.setState({
+                  ...this.state,
+                  filterMenu: !this.state.filterMenu
+                });
+                toggleFilterPreview(null);
+              }}
             />
           </View>
         </View>
+        {this.renderFilterMenu()}
         <RNCamera
           ref={ref => {
             this.camera = ref;
@@ -363,5 +415,12 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { toggleFlash, toggleCamera, onFaceDetected, startStopRecording, VidCamData }
+  {
+    toggleFlash,
+    toggleCamera,
+    onFaceDetected,
+    startStopRecording,
+    VidCamData,
+    toggleFilterPreview
+  }
 )(RecordingScreen);
