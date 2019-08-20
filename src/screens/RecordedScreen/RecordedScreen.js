@@ -19,6 +19,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import Entypo from "react-native-vector-icons/Entypo";
 import { VidCamData } from "../../actions";
 import MovableView from "react-native-movable-view";
+import { LogLevel, RNFFmpeg } from "react-native-ffmpeg";
 
 class RecordedScreen extends Component {
   constructor(props) {
@@ -132,6 +133,11 @@ class RecordedScreen extends Component {
   render() {
     const { videoData, cameraData } = this.props;
     const { paused } = this.state;
+
+    if (videoData) {
+      //       ffmpeg -i test.mp4 -i watermark.png \
+      // -filter_complex "overlay='if(gte(t,1), -w+(t-1)*200, NAN)':(main_h-overlay_h)/2" test4.mp4
+    }
     return (
       <View style={styles.container}>
         {paused ? (

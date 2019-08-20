@@ -25,6 +25,21 @@ import {
 } from "../../actions";
 import Sticker1 from "../../assets/stickers/sticker1.svg";
 import FilterPreview from "../../components/FilterPreview/FilterPreview";
+import { LogLevel, RNFFmpeg } from "react-native-ffmpeg";
+import { VideoUtil } from "../../utils/VideoUtil";
+import RNFS from "react-native-fs";
+
+async function execute(command) {
+  await RNFFmpeg.execute(command).then(result =>
+    console.log("FFmpeg process exited with rc " + result.rc)
+  );
+}
+
+async function executeWithArguments(commandArguments) {
+  await RNFFmpeg.executeWithArguments(commandArguments).then(data => {
+    console.log("FFmpeg process exited with rc " + data.rc);
+  });
+}
 
 class RecordingScreen extends PureComponent {
   state = {
@@ -91,9 +106,165 @@ class RecordingScreen extends PureComponent {
     if (this.camera) {
       const options = { quality: "420px", maxDuration: 60 };
       const data = await this.camera.recordAsync(options);
-      console.log(data.uri, "video");
+      // console.log(data.uri, "video");
+      // RNFFmpeg.execute(`-i ${data.uri} -c:v mpeg4 file2.mp4`).then(result =>
+      //   console.log("FFmpeg process exited with rc " + result.rc)
+      // );
+
+      this.createVideo();
       this.props.VidCamData({ prop: "videoData", value: data });
     }
+  };
+
+  logCallback = logData => {
+    this.setState({ encodeOutput: this.state.encodeOutput + logData.log });
+  };
+
+  statisticsCallback = statisticsData => {
+    console.log(
+      "Statistics; frame: " +
+        statisticsData.videoFrameNumber.toFixed(1) +
+        ", fps: " +
+        statisticsData.videoFps.toFixed(1) +
+        ", quality: " +
+        statisticsData.videoQuality.toFixed(1) +
+        ", size: " +
+        statisticsData.size +
+        ", time: " +
+        statisticsData.time
+    );
+  };
+
+  getLastReceivedStatistics = () => {
+    RNFFmpeg.getLastReceivedStatistics().then(stats =>
+      console.log("Stats: " + JSON.stringify(stats))
+    );
+  };
+
+  getMediaInformation = () => {
+    RNFFmpeg.getMediaInformation(RNFS.CachesDirectoryPath + "/video.mp4").then(
+      info => {
+        console.log("\n");
+        console.log("Result: " + JSON.stringify(info));
+        console.log("Media Information");
+        console.log("Path: " + info.path);
+        console.log("Format: " + info.format);
+        console.log("Duration: " + info.duration);
+        console.log("Start time: " + info.startTime);
+        console.log("Bitrate: " + info.bitrate);
+
+        this.props.VidCamData({ prop: "videoData", value: { uri: info.path } });
+        if (info.streams) {
+          for (var i = 0; i < info.streams.length; i++) {
+            console.log("Stream id: " + info.streams[i].index);
+            console.log("Stream type: " + info.streams[i].type);
+            console.log("Stream codec: " + info.streams[i].codec);
+            console.log("Stream full codec: " + info.streams[i].fullCodec);
+            console.log("Stream format: " + info.streams[i].format);
+            console.log("Stream full format: " + info.streams[i].fullFormat);
+            console.log("Stream width: " + info.streams[i].width);
+            console.log("Stream height: " + info.streams[i].height);
+            console.log("Stream bitrate: " + info.streams[i].bitrate);
+            console.log("Stream sample rate: " + info.streams[i].sampleRate);
+            console.log(
+              "Stream sample format: " + info.streams[i].sampleFormat
+            );
+            console.log(
+              "Stream channel layout: " + info.streams[i].channelLayout
+            );
+            console.log("Stream sar: " + info.streams[i].sampleAspectRatio);
+            console.log("Stream dar: " + info.streams[i].displayAspectRatio);
+            console.log(
+              "Stream average frame rate: " + info.streams[i].averageFrameRate
+            );
+            console.log(
+              "Stream real frame rate: " + info.streams[i].realFrameRate
+            );
+            console.log("Stream time base: " + info.streams[i].timeBase);
+            console.log(
+              "Stream codec time base: " + info.streams[i].codecTimeBase
+            );
+
+            if (info.streams[i].metadata) {
+              console.log(
+                "Stream metadata encoder: " + info.streams[i].metadata.encoder
+              );
+              console.log(
+                "Stream metadata rotate: " + info.streams[i].metadata.rotate
+              );
+              console.log(
+                "Stream metadata creation time: " +
+                  info.streams[i].metadata.creation_time
+              );
+              console.log(
+                "Stream metadata handler name: " +
+                  info.streams[i].metadata.handler_name
+              );
+            }
+
+            if (info.streams[i].sidedata) {
+              console.log(
+                "Stream side data displaymatrix: " +
+                  info.streams[i].sidedata.displaymatrix
+              );
+            }
+          }
+        }
+        console.log("\n");
+      }
+    );
+  };
+
+  createVideo = () => {
+    RNFFmpeg.enableLogCallback(this.logCallback);
+    RNFFmpeg.enableStatisticsCallback(this.statisticsCallback);
+
+    console.log("Testing VIDEO.");
+
+    VideoUtil.resourcePath("colosseum.jpg")
+      .then(image1 => {
+        console.log("Saved resource colosseum.jpg to " + image1);
+
+        VideoUtil.resourcePath("pyramid.jpg")
+          .then(image2 => {
+            console.log("Saved resource pyramid.jpg to " + image2);
+
+            VideoUtil.resourcePath("tajmahal.jpg")
+              .then(image3 => {
+                console.log("Saved resource tajmahal.jpg to " + image3);
+
+                var videoPath = RNFS.CachesDirectoryPath + "/video.mp4";
+
+                console.log("FFmpeg process started with arguments");
+                let command = VideoUtil.generateEncodeVideoScript(
+                  image1,
+                  image2,
+                  image3,
+                  videoPath,
+                  // this.state.videoCodec,
+                  "mpeg4",
+                  ""
+                );
+                console.log(command);
+
+                execute(command).then(rc => {
+                  this.getMediaInformation();
+                });
+              })
+              .catch(err => {
+                console.log("Failed to save resource: tajmahal.jpg");
+                console.log(err.message, err.code);
+              });
+          })
+          .catch(err => {
+            console.log("Failed to save resource: pyramid.jpg");
+            console.log(err.message, err.code);
+          });
+      })
+      .catch(err => {
+        console.log("Failed to save resource: colosseum.jpg");
+        console.log(err.message, err.code);
+      });
   };
 
   renderFaceDetect = () => {
@@ -296,16 +467,19 @@ class RecordingScreen extends PureComponent {
             ) : null}
           </View>
           <TouchableOpacity
-            onPress={() => {
-              if (!videoData) {
-                this.takePicture();
-              }
-            }}
             // onPress={() => {
-            //   this.takeVideo();
-            //   startStopRecording(recording);
+            //   if (!videoData) {
+            //     this.takePicture();
+            //   }
             // }}
-            onLongPress={() => {
+
+            // onLongPress={() => {
+            //   if (!cameraData) {
+            //     this.takeVideo();
+            //     startStopRecording(recording);
+            //   }
+            // }}
+            onPress={() => {
               if (!cameraData) {
                 this.takeVideo();
                 startStopRecording(recording);
