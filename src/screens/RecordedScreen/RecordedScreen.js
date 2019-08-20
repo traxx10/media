@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 import {
+  Platform,
   StyleSheet,
   Text,
   View,
   TouchableWithoutFeedback,
-  Image,
+  Picker,
+  ToastAndroid,
+  ProgressBarAndroid,
   Alert
 } from "react-native";
 import { connect } from "react-redux";
@@ -15,6 +18,7 @@ import { Thumbnail } from "react-native-thumbnail-video";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Entypo from "react-native-vector-icons/Entypo";
 import { VidCamData } from "../../actions";
+import MovableView from "react-native-movable-view";
 
 class RecordedScreen extends Component {
   constructor(props) {
@@ -30,7 +34,8 @@ class RecordedScreen extends Component {
       paused: false,
       pickerValueHolder: "1.0",
       pausedText: "Play",
-      hideControls: false
+      hideControls: false,
+      moveable: true
     };
 
     this.video = Video;
@@ -174,76 +179,67 @@ class RecordedScreen extends Component {
         ) : null}
         {paused ? (
           <View style={styles.buttonContainer}>
-            <Button
-              title="Submit"
-              type="solid"
-              buttonStyle={{
-                borderRadius: 100,
-                backgroundColor: "#999",
-                paddingHorizontal: 18
-              }}
-              titleStyle={{ color: "#fff" }}
-              onPress={() => {
-                Alert.alert(
-                  "MEDIA",
-                  "Submitted",
-                  [
-                    {
-                      text: "OK",
-                      onPress: () => {
-                        this.props.VidCamData({
-                          prop: "VideoData",
-                          value: null
-                        });
-                        this.props.navigation.navigate("Record");
-                      }
-                    }
-                  ],
-                  { cancelable: false }
-                );
-              }}
-            />
+            {this.state.moveable ? (
+              <MovableView onDragEnd={() => this.setState({ moveable: false })}>
+                <Button
+                  title="Submit"
+                  type="solid"
+                  buttonStyle={{
+                    borderRadius: 100,
+                    backgroundColor: "#999",
+                    paddingHorizontal: 18
+                  }}
+                  titleStyle={{ color: "#fff" }}
+                  onPress={() => {
+                    Alert.alert(
+                      "MEDIA",
+                      "Submitted",
+                      [
+                        {
+                          text: "OK",
+                          onPress: () => {
+                            this.props.VidCamData({
+                              prop: "VideoData",
+                              value: null
+                            });
+                            this.props.navigation.navigate("Record");
+                          }
+                        }
+                      ],
+                      { cancelable: false }
+                    );
+                  }}
+                />
+              </MovableView>
+            ) : null}
           </View>
         ) : null}
         {videoData ? (
-          <View>
-            <VideoPlayer
-              // navigator={() => this.props.navigation.pop()}
-              onBack={() => this.props.navigation.navigate("Record")}
-              source={{ uri: videoData.uri }} // Can be a URL or a local file.
-              ref={ref => {
-                this.video = ref;
-              }} // Store reference
-              onBuffer={this.onBuffer} // Callback when remote video is buffering
-              onError={this.videoError} // Callback when video cannot be loaded
-              style={styles.fullScreen}
-              paused={paused}
-              disableSeekbar
-              // resizeMode={this.state.resizeMode}
-              onLoad={this.onLoad}
-              onEnd={this.onEnd}
-              repeat={false}
-              disableVolume
-              disableBack
-              onPlay={() => {
-                this.setState({ paused: false });
-              }}
-              onPause={() => {
-                this.setState({ paused: true });
-              }}
-            />
-            <Image
-              source={require("../../assets/stickers/sticker1.png")}
-              resizeMode="stretch"
-              style={{
-                width: "100%",
-                height: "100%",
-                flex: 1,
-                zIndex: 50,
-                position: "absolute"
-              }}
-            />
-          </View>
+          <VideoPlayer
+            // navigator={() => this.props.navigation.pop()}
+            onBack={() => this.props.navigation.navigate("Record")}
+            source={{ uri: videoData.uri }} // Can be a URL or a local file.
+            ref={ref => {
+              this.video = ref;
+            }} // Store reference
+            onBuffer={this.onBuffer} // Callback when remote video is buffering
+            onError={this.videoError} // Callback when video cannot be loaded
+            style={styles.fullScreen}
+            paused={paused}
+            disableSeekbar
+            // resizeMode={this.state.resizeMode}
+            onLoad={this.onLoad}
+            onEnd={this.onEnd}
+            repeat={false}
+            disableVolume
+            disableBack
+            onPlay={() => {
+              this.setState({ paused: false });
+            }}
+            onPause={() => {
+              this.setState({ paused: true });
+            }}
+          />
         ) : (
           <View>
             <Text> Loading </Text>
@@ -251,115 +247,30 @@ class RecordedScreen extends Component {
         )}
         {paused ? (
           <View style={styles.footerContainer}>
-            <View style={{ flexDirection: "row" }}>
-              <Avatar
-                rounded
-                source={{
-                  uri:
-                    "https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg"
-                }}
-                size={55}
-              />
-              <View style={{ marginLeft: 12 }}>
-                <Text style={styles.userData}> @robJones</Text>
-                <Text style={styles.userData}> Inverness, Scotland</Text>
-                <Text style={styles.userData}> 07 June 2019</Text>
-                <Text style={styles.userData}> 14:35 </Text>
+            <TouchableWithoutFeedback
+              onPress={() => this.setState({ moveable: true })}
+            >
+              <View style={{ flexDirection: "row" }}>
+                <Avatar
+                  rounded
+                  source={{
+                    uri:
+                      "https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg"
+                  }}
+                  size={55}
+                />
+                <View style={{ marginLeft: 12 }}>
+                  <Text style={styles.userData}> @robJones</Text>
+                  <Text style={styles.userData}> Inverness, Scotland</Text>
+                  <Text style={styles.userData}> 07 June 2019</Text>
+                  <Text style={styles.userData}> 14:35 </Text>
+                </View>
               </View>
-            </View>
+            </TouchableWithoutFeedback>
           </View>
         ) : null}
       </View>
     );
-    // return (
-    //   <View style={styles.container}>
-    //     <TouchableWithoutFeedback
-    //       style={styles.fullScreen}
-    //       onPress={() => this.onPressVideo()}
-    //     >
-    //       {videoData ? (
-    //         <Video
-    //           source={{ uri: videoData.uri }} // Can be a URL or a local file.
-    //           ref={ref => {
-    //             this.video = ref;
-    //           }} // Store reference
-    //           onBuffer={this.onBuffer} // Callback when remote video is buffering
-    //           onError={this.videoError} // Callback when video cannot be loaded
-    //           style={styles.fullScreen}
-    //           rate={this.state.rate}
-    //           paused={this.state.paused}
-    //           volume={this.state.volume}
-    //           muted={this.state.muted}
-    //           resizeMode={this.state.resizeMode}
-    //           onLoad={this.onLoad}
-    //           onProgress={this.onProgress}
-    //           onEnd={this.onEnd}
-    //           onAudioBecomingNoisy={this.onAudioBecomingNoisy}
-    //           onAudioFocusChanged={this.onAudioFocusChanged}
-    //           repeat={false}
-    //         />
-    //       ) : (
-    //         <Text> Hello Nothing</Text>
-    //       )}
-    //       {/* ) : (
-    //       <Text> Hello Nothing </Text>
-    //     )} */}
-    //     </TouchableWithoutFeedback>
-    //     {!this.state.hideControls ? (
-    //       <View style={styles.controls}>
-    //         <View style={styles.generalControls}>
-    //           <View style={styles.rateControl}>
-    //             <Picker
-    //               style={{ width: 110 }}
-    //               selectedValue={this.state.pickerValueHolder}
-    //               onValueChange={(itemValue, itemIndex) =>
-    //                 this.onChangeRate(itemValue, itemIndex)
-    //               }
-    //             >
-    //               <Picker.Item label="x1.5" value="1.5" />
-    //               <Picker.Item label="x1.25" value="1.25" />
-    //               <Picker.Item label="x1.0" value="1.0" />
-    //               <Picker.Item label="x0.75" value="0.75" />
-    //               <Picker.Item label="x0.5" value="0.5" />
-    //             </Picker>
-    //           </View>
-    //           <View style={styles.playControl}>
-    //             <Text onPress={() => this.onPressBtnPlay()}>
-    //               {this.state.pausedText}
-    //             </Text>
-    //           </View>
-    //           <View style={styles.resizeModeControl}>
-    //             <Picker
-    //               style={{ width: 150 }}
-    //               selectedValue={this.state.resizeMode}
-    //               onValueChange={(itemValue, itemIndex) =>
-    //                 this.setState({ resizeMode: itemValue })
-    //               }
-    //             >
-    //               <Picker.Item label="none" value="none" />
-    //               <Picker.Item label="cover" value="cover" />
-    //               <Picker.Item label="stretch" value="stretch" />
-    //               <Picker.Item label="contain" value="contain" />
-    //             </Picker>
-    //           </View>
-    //         </View>
-
-    //         <View style={styles.trackingControls}>
-    //           <ProgressBarAndroid
-    //             style={styles.progress}
-    //             styleAttr="Horizontal"
-    //             indeterminate={false}
-    //             progress={this.getCurrentTimePercentage()}
-    //           />
-    //           <Text>
-    //             {this.parseSecToTime(parseInt(this.state.currentTime))}/
-    //             {this.parseSecToTime(parseInt(this.state.duration))}
-    //           </Text>
-    //         </View>
-    //       </View>
-    //     ) : null}
-    //   </View>
-    // );
   }
 }
 
@@ -371,10 +282,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white"
   },
   fullScreen: {
-    position: "relative",
-    flex: 1,
-    width: "100%",
-    height: "100%"
+    position: "relative"
     // position: "absolute",
     // top: 0,
     // left: 0,
