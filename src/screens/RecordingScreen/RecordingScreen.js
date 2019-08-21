@@ -111,7 +111,8 @@ class RecordingScreen extends PureComponent {
       //   console.log("FFmpeg process exited with rc " + result.rc)
       // );
 
-      this.createVideo();
+      // this.createVideo(data.uri);
+      this.createFilter(data.uri);
       this.props.VidCamData({ prop: "videoData", value: data });
     }
   };
@@ -142,7 +143,7 @@ class RecordingScreen extends PureComponent {
   };
 
   getMediaInformation = () => {
-    RNFFmpeg.getMediaInformation(RNFS.CachesDirectoryPath + "/video.mp4").then(
+    RNFFmpeg.getMediaInformation(RNFS.CachesDirectoryPath + "/video2.mp4").then(
       info => {
         console.log("\n");
         console.log("Result: " + JSON.stringify(info));
@@ -215,7 +216,7 @@ class RecordingScreen extends PureComponent {
     );
   };
 
-  createVideo = () => {
+  createVideo = recordedVideo => {
     RNFFmpeg.enableLogCallback(this.logCallback);
     RNFFmpeg.enableStatisticsCallback(this.statisticsCallback);
 
@@ -243,7 +244,8 @@ class RecordingScreen extends PureComponent {
                   videoPath,
                   // this.state.videoCodec,
                   "mpeg4",
-                  ""
+                  "",
+                  recordedVideo
                 );
                 console.log(command);
 
@@ -294,6 +296,33 @@ class RecordingScreen extends PureComponent {
     // }
 
     return null;
+  };
+
+  createFilter = video => {
+    let videoPath = RNFS.CachesDirectoryPath + "/video2.mp4";
+
+    VideoUtil.resourcePath("colosseum.jpg").then(image => {
+      console.log("Saved resource colosseum.jpg to " + image);
+
+      let ffmpegCommand =
+        "-i " +
+        video +
+        " -i " +
+        image +
+        " -filter_complex overlay=x=(main_w-overlay_w)/2:y=(main_h-overlay_h)/2 " +
+        videoPath;
+
+      RNFFmpeg.execute(ffmpegCommand)
+        .then(result => {
+          console.log("succ " + result);
+          this.getMediaInformation();
+        })
+        .catch(error => {
+          console.log(error, "error");
+        });
+    });
+
+    // RNFFmpeg.execute('-i '+ +' -i ' ++ '-filter_complex "overlay=10:10"' ).then(result => console.log("FFmpeg process exited with rc " + result));
   };
 
   renderFilterMenu = () => {
