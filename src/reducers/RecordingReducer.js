@@ -3,7 +3,8 @@ import {
   TOGGLE_CAMERA,
   ON_FACE_DETECTED,
   START_STOP_RECORDING,
-  VIDEO_CAMERA_DATA
+  VIDEO_CAMERA_DATA,
+  EXTENSION_NAME
 } from "../actions/types";
 
 const INITIAL_STATE = {
@@ -12,7 +13,8 @@ const INITIAL_STATE = {
   recording: false,
   faceDetectedDetails: null,
   videoData: null,
-  cameraData: null
+  cameraData: null,
+  extName: null
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -31,6 +33,9 @@ export default (state = INITIAL_STATE, action) => {
 
     case VIDEO_CAMERA_DATA:
       return { ...state, [action.payload.prop]: action.payload.value };
+
+    case EXTENSION_NAME:
+      return { ...state, extName: action.payload };
 
     default:
       return state;

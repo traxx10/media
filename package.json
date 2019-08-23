@@ -9,6 +9,7 @@
     "android": "react-native run-android && react-native start"
   },
   "dependencies": {
+    "random-string": "^0.2.0",
     "react": "16.8.6",
     "react-native": "0.60.4",
     "react-native-camera": "^3.0.0",
@@ -16,6 +17,7 @@
     "react-native-ffmpeg": "^0.3.5",
     "react-native-fs": "^2.14.1",
     "react-native-gesture-handler": "^1.3.0",
+    "react-native-modal": "^11.3.1",
     "react-native-movable-view": "^1.0.3",
     "react-native-svg": "^9.6.4",
     "react-native-thumbnail-video": "^0.1.2",

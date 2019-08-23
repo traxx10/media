@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import React, { Component } from "react";
 import { Button, Avatar } from "react-native-elements";
-import { Thumbnail } from "react-native-thumbnail-video";
+// import { Thumbnail } from "react-native-thumbnail-video";
 import { connect } from "react-redux";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Entypo from "react-native-vector-icons/Entypo";

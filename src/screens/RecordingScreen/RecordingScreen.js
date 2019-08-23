@@ -21,13 +21,16 @@ import {
   onFaceDetected,
   startStopRecording,
   VidCamData,
-  toggleFilterPreview
+  toggleFilterPreview,
+  extensionName
 } from "../../actions";
 import Sticker1 from "../../assets/stickers/sticker1.svg";
 import FilterPreview from "../../components/FilterPreview/FilterPreview";
 import { LogLevel, RNFFmpeg } from "react-native-ffmpeg";
 import { VideoUtil } from "../../utils/VideoUtil";
 import RNFS from "react-native-fs";
+import Modal from "react-native-modal";
+import randomString from "random-string";
 
 async function execute(command) {
   await RNFFmpeg.execute(command).then(result =>
@@ -55,6 +58,10 @@ class RecordingScreen extends PureComponent {
 
     console.log(uri);
     console.log(codec);
+  }
+
+  componentDidMount() {
+    // console.log(randomString({ length: 5 }));
   }
 
   stopRecording() {
@@ -103,17 +110,14 @@ class RecordingScreen extends PureComponent {
   };
 
   takeVideo = async () => {
+    const { extensionName } = this.props;
     if (this.camera) {
       const options = { quality: "420px", maxDuration: 60 };
       const data = await this.camera.recordAsync(options);
-      // console.log(data.uri, "video");
-      // RNFFmpeg.execute(`-i ${data.uri} -c:v mpeg4 file2.mp4`).then(result =>
-      //   console.log("FFmpeg process exited with rc " + result.rc)
-      // );
 
-      // this.createVideo(data.uri);
+      extensionName(randomString({ length: 5 }));
+      this.setState({ processing: true });
       this.createFilter(data.uri);
-      this.props.VidCamData({ prop: "videoData", value: data });
     }
   };
 
@@ -143,8 +147,10 @@ class RecordingScreen extends PureComponent {
   };
 
   getMediaInformation = () => {
+    const { extName } = this.props;
+
     RNFFmpeg.getMediaInformation(
-      RNFS.CachesDirectoryPath + "/video76.mp4"
+      RNFS.CachesDirectoryPath + `/${extName}.mp4`
     ).then(info => {
       console.log("\n");
       console.log("Result: " + JSON.stringify(info));
@@ -155,61 +161,65 @@ class RecordingScreen extends PureComponent {
       console.log("Start time: " + info.startTime);
       console.log("Bitrate: " + info.bitrate);
 
-      this.props.VidCamData({ prop: "videoData", value: { uri: info.path } });
-      if (info.streams) {
-        for (var i = 0; i < info.streams.length; i++) {
-          console.log("Stream id: " + info.streams[i].index);
-          console.log("Stream type: " + info.streams[i].type);
-          console.log("Stream codec: " + info.streams[i].codec);
-          console.log("Stream full codec: " + info.streams[i].fullCodec);
-          console.log("Stream format: " + info.streams[i].format);
-          console.log("Stream full format: " + info.streams[i].fullFormat);
-          console.log("Stream width: " + info.streams[i].width);
-          console.log("Stream height: " + info.streams[i].height);
-          console.log("Stream bitrate: " + info.streams[i].bitrate);
-          console.log("Stream sample rate: " + info.streams[i].sampleRate);
-          console.log("Stream sample format: " + info.streams[i].sampleFormat);
-          console.log(
-            "Stream channel layout: " + info.streams[i].channelLayout
-          );
-          console.log("Stream sar: " + info.streams[i].sampleAspectRatio);
-          console.log("Stream dar: " + info.streams[i].displayAspectRatio);
-          console.log(
-            "Stream average frame rate: " + info.streams[i].averageFrameRate
-          );
-          console.log(
-            "Stream real frame rate: " + info.streams[i].realFrameRate
-          );
-          console.log("Stream time base: " + info.streams[i].timeBase);
-          console.log(
-            "Stream codec time base: " + info.streams[i].codecTimeBase
-          );
+      this.props.VidCamData({
+        prop: "videoData",
+        value: { uri: info.path }
+      });
+      this.setState({ processing: true });
+      // if (info.streams) {
+      //   for (var i = 0; i < info.streams.length; i++) {
+      //     console.log("Stream id: " + info.streams[i].index);
+      //     console.log("Stream type: " + info.streams[i].type);
+      //     console.log("Stream codec: " + info.streams[i].codec);
+      //     console.log("Stream full codec: " + info.streams[i].fullCodec);
+      //     console.log("Stream format: " + info.streams[i].format);
+      //     console.log("Stream full format: " + info.streams[i].fullFormat);
+      //     console.log("Stream width: " + info.streams[i].width);
+      //     console.log("Stream height: " + info.streams[i].height);
+      //     console.log("Stream bitrate: " + info.streams[i].bitrate);
+      //     console.log("Stream sample rate: " + info.streams[i].sampleRate);
+      //     console.log("Stream sample format: " + info.streams[i].sampleFormat);
+      //     console.log(
+      //       "Stream channel layout: " + info.streams[i].channelLayout
+      //     );
+      //     console.log("Stream sar: " + info.streams[i].sampleAspectRatio);
+      //     console.log("Stream dar: " + info.streams[i].displayAspectRatio);
+      //     console.log(
+      //       "Stream average frame rate: " + info.streams[i].averageFrameRate
+      //     );
+      //     console.log(
+      //       "Stream real frame rate: " + info.streams[i].realFrameRate
+      //     );
+      //     console.log("Stream time base: " + info.streams[i].timeBase);
+      //     console.log(
+      //       "Stream codec time base: " + info.streams[i].codecTimeBase
+      //     );
 
-          if (info.streams[i].metadata) {
-            console.log(
-              "Stream metadata encoder: " + info.streams[i].metadata.encoder
-            );
-            console.log(
-              "Stream metadata rotate: " + info.streams[i].metadata.rotate
-            );
-            console.log(
-              "Stream metadata creation time: " +
-                info.streams[i].metadata.creation_time
-            );
-            console.log(
-              "Stream metadata handler name: " +
-                info.streams[i].metadata.handler_name
-            );
-          }
+      //     if (info.streams[i].metadata) {
+      //       console.log(
+      //         "Stream metadata encoder: " + info.streams[i].metadata.encoder
+      //       );
+      //       console.log(
+      //         "Stream metadata rotate: " + info.streams[i].metadata.rotate
+      //       );
+      //       console.log(
+      //         "Stream metadata creation time: " +
+      //           info.streams[i].metadata.creation_time
+      //       );
+      //       console.log(
+      //         "Stream metadata handler name: " +
+      //           info.streams[i].metadata.handler_name
+      //       );
+      //     }
 
-          if (info.streams[i].sidedata) {
-            console.log(
-              "Stream side data displaymatrix: " +
-                info.streams[i].sidedata.displaymatrix
-            );
-          }
-        }
-      }
+      //     if (info.streams[i].sidedata) {
+      //       console.log(
+      //         "Stream side data displaymatrix: " +
+      //           info.streams[i].sidedata.displaymatrix
+      //       );
+      //     }
+      //   }
+      // }
       console.log("\n");
     });
   };
@@ -297,7 +307,8 @@ class RecordingScreen extends PureComponent {
   };
 
   createFilter = video => {
-    let videoPath = RNFS.CachesDirectoryPath + "/video76.mp4";
+    const { extName } = this.props;
+    let videoPath = RNFS.CachesDirectoryPath + `/${extName}.mp4`;
 
     VideoUtil.resourcePath("mic1.png").then(image => {
       console.log("Saved resource mic2.png to " + image);
@@ -312,7 +323,7 @@ class RecordingScreen extends PureComponent {
 
       RNFFmpeg.execute(ffmpegCommand)
         .then(result => {
-          console.log("succ " + result);
+          console.log("succ ");
           this.getMediaInformation();
         })
         .catch(error => {
@@ -417,17 +428,11 @@ class RecordingScreen extends PureComponent {
     } = this.props;
     return (
       <View style={styles.container}>
-        {/* <Image
-          source={require("../../assets/stickers/sticker1.png")}
-          resizeMode="stretch"
-          style={{
-            width: "100%",
-            height: "100%",
-            flex: 1,
-            zIndex: 50,
-            position: "absolute"
-          }}
-        /> */}
+        <Modal isVisible={true}>
+          <View style={{ backgroundColor: "#fff", height: "20%" }}>
+            <Text>I am the modal content!</Text>
+          </View>
+        </Modal>
         <View style={styles.headerContainer}>
           <View
             style={{
@@ -672,7 +677,8 @@ const mapStateToProps = state => {
     interviewFilters: state.FilterPreviewReducer.interviewFilters,
     newsFilters: state.FilterPreviewReducer.newsFilters,
     selectedIndex: state.FilterPreviewReducer.selectedIndex,
-    selectedFilter: state.FilterPreviewReducer.selectedFilter
+    selectedFilter: state.FilterPreviewReducer.selectedFilter,
+    extName: state.RecordingReducer.extName
   };
 };
 
@@ -684,6 +690,7 @@ export default connect(
     onFaceDetected,
     startStopRecording,
     VidCamData,
-    toggleFilterPreview
+    toggleFilterPreview,
+    extensionName
   }
 )(RecordingScreen);
