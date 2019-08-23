@@ -1,6 +1,14 @@
 import React, { Component } from "react";
-import { View, Text, ScrollView, Image, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  Image,
+  StyleSheet,
+  TouchableWithoutFeedback
+} from "react-native";
 import { connect } from "react-redux";
+import { selectFilter } from "../../actions";
 
 class FilterPreview extends Component {
   constructor(props) {
@@ -9,7 +17,12 @@ class FilterPreview extends Component {
   }
 
   renderFilters() {
-    const { selectedPreview, interviewFilters, newsFilters } = this.props;
+    const {
+      selectedPreview,
+      interviewFilters,
+      newsFilters,
+      selectFilter
+    } = this.props;
 
     if (selectedPreview) {
       if (selectedPreview === "news") {
@@ -17,31 +30,38 @@ class FilterPreview extends Component {
       } else if (selectedPreview === "interview") {
         let filters = interviewFilters.map((data, index) => {
           return (
-            <View
+            <TouchableWithoutFeedback
+              onPress={() =>
+                selectFilter(interviewFilters, data.resourceName, index)
+              }
               key={data.filterName}
-              style={[
-                styles.filters,
-                data.selected
-                  ? { borderColor: "orange" }
-                  : { borderColor: "#fff" }
-              ]}
             >
-              <Image
-                source={data.uri}
-                resizeMode="contain"
-                style={{
-                  height: null,
-                  width: null,
-                  flex: 1,
-                  margin: 5
-                }}
-              />
-              <View style={{ backgroundColor: "#000" }}>
-                <Text style={{ color: "#fff", textAlign: "center" }}>
-                  {data.filterName}
-                </Text>
+              <View
+                // key={data.filterName}
+                style={[
+                  styles.filters,
+                  data.selected
+                    ? { borderColor: "orange" }
+                    : { borderColor: "#fff" }
+                ]}
+              >
+                <Image
+                  source={data.uri}
+                  resizeMode="contain"
+                  style={{
+                    height: null,
+                    width: null,
+                    flex: 1,
+                    margin: 5
+                  }}
+                />
+                <View style={{ backgroundColor: "#000" }}>
+                  <Text style={{ color: "#fff", textAlign: "center" }}>
+                    {data.filterName}
+                  </Text>
+                </View>
               </View>
-            </View>
+            </TouchableWithoutFeedback>
           );
         });
 
@@ -70,7 +90,6 @@ const styles = StyleSheet.create({
     height: "60%",
     width: 60,
     margin: 10,
-    // padding: 5,
     backgroundColor: "#fff"
   }
 });
@@ -83,4 +102,7 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(FilterPreview);
+export default connect(
+  mapStateToProps,
+  { selectFilter }
+)(FilterPreview);

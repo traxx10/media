@@ -9,6 +9,18 @@
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* mediaTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* mediaTests.m */; };
 		0490E12C431B10F84BC62E56 /* libPods-mediaTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A6B3018B6AFA59E6CEAB43E0 /* libPods-mediaTests.a */; };
+		04C3B54C230EC2D300A81E82 /* mic6.png in Resources */ = {isa = PBXBuildFile; fileRef = 04C3B546230EC2D200A81E82 /* mic6.png */; };
+		04C3B54D230EC2D300A81E82 /* mic1.png in Resources */ = {isa = PBXBuildFile; fileRef = 04C3B547230EC2D200A81E82 /* mic1.png */; };
+		04C3B54E230EC2D300A81E82 /* mic2.png in Resources */ = {isa = PBXBuildFile; fileRef = 04C3B548230EC2D300A81E82 /* mic2.png */; };
+		04C3B54F230EC2D300A81E82 /* mic4.png in Resources */ = {isa = PBXBuildFile; fileRef = 04C3B549230EC2D300A81E82 /* mic4.png */; };
+		04C3B550230EC2D300A81E82 /* mic5.png in Resources */ = {isa = PBXBuildFile; fileRef = 04C3B54A230EC2D300A81E82 /* mic5.png */; };
+		04C3B551230EC2D300A81E82 /* mic3.png in Resources */ = {isa = PBXBuildFile; fileRef = 04C3B54B230EC2D300A81E82 /* mic3.png */; };
+		04C3B558230EEC7500A81E82 /* mic4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 04C3B552230EEC7400A81E82 /* mic4.jpg */; };
+		04C3B559230EEC7500A81E82 /* mic1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 04C3B553230EEC7400A81E82 /* mic1.jpg */; };
+		04C3B55A230EEC7500A81E82 /* mic5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 04C3B554230EEC7400A81E82 /* mic5.jpg */; };
+		04C3B55B230EEC7500A81E82 /* mic2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 04C3B555230EEC7400A81E82 /* mic2.jpg */; };
+		04C3B55C230EEC7500A81E82 /* mic6.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 04C3B556230EEC7500A81E82 /* mic6.jpg */; };
+		04C3B55D230EEC7500A81E82 /* mic3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 04C3B557230EEC7500A81E82 /* mic3.jpg */; };
 		04CE3990230149A900215CF3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 04CE398F230149A900215CF3 /* GoogleService-Info.plist */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
@@ -61,6 +73,18 @@
 		00E356EE1AD99517003FC87E /* mediaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = mediaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* mediaTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = mediaTests.m; sourceTree = "<group>"; };
+		04C3B546230EC2D200A81E82 /* mic6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = mic6.png; path = ../src/assets/stickers/mic6.png; sourceTree = "<group>"; };
+		04C3B547230EC2D200A81E82 /* mic1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = mic1.png; path = ../src/assets/stickers/mic1.png; sourceTree = "<group>"; };
+		04C3B548230EC2D300A81E82 /* mic2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = mic2.png; path = ../src/assets/stickers/mic2.png; sourceTree = "<group>"; };
+		04C3B549230EC2D300A81E82 /* mic4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = mic4.png; path = ../src/assets/stickers/mic4.png; sourceTree = "<group>"; };
+		04C3B54A230EC2D300A81E82 /* mic5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = mic5.png; path = ../src/assets/stickers/mic5.png; sourceTree = "<group>"; };
+		04C3B54B230EC2D300A81E82 /* mic3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = mic3.png; path = ../src/assets/stickers/mic3.png; sourceTree = "<group>"; };
+		04C3B552230EEC7400A81E82 /* mic4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = mic4.jpg; path = ../src/assets/stickers/mic4.jpg; sourceTree = "<group>"; };
+		04C3B553230EEC7400A81E82 /* mic1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = mic1.jpg; path = ../src/assets/stickers/mic1.jpg; sourceTree = "<group>"; };
+		04C3B554230EEC7400A81E82 /* mic5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = mic5.jpg; path = ../src/assets/stickers/mic5.jpg; sourceTree = "<group>"; };
+		04C3B555230EEC7400A81E82 /* mic2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = mic2.jpg; path = ../src/assets/stickers/mic2.jpg; sourceTree = "<group>"; };
+		04C3B556230EEC7500A81E82 /* mic6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = mic6.jpg; path = ../src/assets/stickers/mic6.jpg; sourceTree = "<group>"; };
+		04C3B557230EEC7500A81E82 /* mic3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = mic3.jpg; path = ../src/assets/stickers/mic3.jpg; sourceTree = "<group>"; };
 		04CE398F230149A900215CF3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0844BDFFBA8778CDB3B145F5 /* libPods-media.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-media.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07F961A680F5B00A75B9A /* media.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = media.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -236,6 +260,18 @@
 		C11ACB6A124740C8AF5FC4BC /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				04C3B553230EEC7400A81E82 /* mic1.jpg */,
+				04C3B555230EEC7400A81E82 /* mic2.jpg */,
+				04C3B557230EEC7500A81E82 /* mic3.jpg */,
+				04C3B552230EEC7400A81E82 /* mic4.jpg */,
+				04C3B554230EEC7400A81E82 /* mic5.jpg */,
+				04C3B556230EEC7500A81E82 /* mic6.jpg */,
+				04C3B547230EC2D200A81E82 /* mic1.png */,
+				04C3B548230EC2D300A81E82 /* mic2.png */,
+				04C3B54B230EC2D300A81E82 /* mic3.png */,
+				04C3B549230EC2D300A81E82 /* mic4.png */,
+				04C3B54A230EC2D300A81E82 /* mic5.png */,
+				04C3B546230EC2D200A81E82 /* mic6.png */,
 				D14A82F6FC8E435DAB2287A6 /* AntDesign.ttf */,
 				6B5234361DC64CBCAB5161F8 /* Entypo.ttf */,
 				21AEC91FC0E2495B8037D33C /* EvilIcons.ttf */,
@@ -396,23 +432,35 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				04C3B551230EC2D300A81E82 /* mic3.png in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				04C3B55B230EEC7500A81E82 /* mic2.jpg in Resources */,
 				919812B969CF4A16BF00593D /* AntDesign.ttf in Resources */,
 				D3F7F44F673F4CA5B20EAE45 /* Entypo.ttf in Resources */,
+				04C3B55A230EEC7500A81E82 /* mic5.jpg in Resources */,
 				6AB6935467BC4ED498AF3A1A /* EvilIcons.ttf in Resources */,
 				E9EEF6CB40F641FEA0967004 /* Feather.ttf in Resources */,
+				04C3B54C230EC2D300A81E82 /* mic6.png in Resources */,
+				04C3B558230EEC7500A81E82 /* mic4.jpg in Resources */,
 				EDCA67EADE794A9FB5ADCF02 /* FontAwesome.ttf in Resources */,
 				752113234D504D3CA94561A1 /* FontAwesome5_Brands.ttf in Resources */,
 				A7330F0F92C74A47848DC7F4 /* FontAwesome5_Regular.ttf in Resources */,
 				175FB11DF78D43329DFD672E /* FontAwesome5_Solid.ttf in Resources */,
+				04C3B55D230EEC7500A81E82 /* mic3.jpg in Resources */,
 				242784B7FF8E488A954A1FB4 /* Fontisto.ttf in Resources */,
+				04C3B55C230EEC7500A81E82 /* mic6.jpg in Resources */,
+				04C3B54F230EC2D300A81E82 /* mic4.png in Resources */,
 				04CE3990230149A900215CF3 /* GoogleService-Info.plist in Resources */,
 				592C77ADCAE645E2BEC364FD /* Foundation.ttf in Resources */,
 				883A5E3892AC478AAB1CA5D9 /* Ionicons.ttf in Resources */,
 				4A18BD9FFFE94E4F8F6C8B61 /* MaterialCommunityIcons.ttf in Resources */,
+				04C3B550230EC2D300A81E82 /* mic5.png in Resources */,
 				B0B2731D1E4F430A84BB9DD8 /* MaterialIcons.ttf in Resources */,
+				04C3B54D230EC2D300A81E82 /* mic1.png in Resources */,
+				04C3B559230EEC7500A81E82 /* mic1.jpg in Resources */,
 				8491FA7908EF4D3887CC6799 /* Octicons.ttf in Resources */,
 				1AFB642C78F14A1F8E1C5DF2 /* SimpleLineIcons.ttf in Resources */,
+				04C3B54E230EC2D300A81E82 /* mic2.png in Resources */,
 				BD9DD8A9D2DD40B1A895C2EA /* Zocial.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

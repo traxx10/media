@@ -7,3 +7,4 @@ export const VIDEO_CAMERA_DATA = "video_camera_data";
 
 // FILTER PREVIEW TYPES
 export const TOGGLE_SELECTED_FILTER_PREVIEW = "toggle_selected_filter_preview";
+export const SELECT_FILTER = "select_filter";

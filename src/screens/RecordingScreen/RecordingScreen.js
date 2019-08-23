@@ -143,77 +143,75 @@ class RecordingScreen extends PureComponent {
   };
 
   getMediaInformation = () => {
-    RNFFmpeg.getMediaInformation(RNFS.CachesDirectoryPath + "/video2.mp4").then(
-      info => {
-        console.log("\n");
-        console.log("Result: " + JSON.stringify(info));
-        console.log("Media Information");
-        console.log("Path: " + info.path);
-        console.log("Format: " + info.format);
-        console.log("Duration: " + info.duration);
-        console.log("Start time: " + info.startTime);
-        console.log("Bitrate: " + info.bitrate);
+    RNFFmpeg.getMediaInformation(
+      RNFS.CachesDirectoryPath + "/video76.mp4"
+    ).then(info => {
+      console.log("\n");
+      console.log("Result: " + JSON.stringify(info));
+      console.log("Media Information");
+      console.log("Path: " + info.path);
+      console.log("Format: " + info.format);
+      console.log("Duration: " + info.duration);
+      console.log("Start time: " + info.startTime);
+      console.log("Bitrate: " + info.bitrate);
 
-        this.props.VidCamData({ prop: "videoData", value: { uri: info.path } });
-        if (info.streams) {
-          for (var i = 0; i < info.streams.length; i++) {
-            console.log("Stream id: " + info.streams[i].index);
-            console.log("Stream type: " + info.streams[i].type);
-            console.log("Stream codec: " + info.streams[i].codec);
-            console.log("Stream full codec: " + info.streams[i].fullCodec);
-            console.log("Stream format: " + info.streams[i].format);
-            console.log("Stream full format: " + info.streams[i].fullFormat);
-            console.log("Stream width: " + info.streams[i].width);
-            console.log("Stream height: " + info.streams[i].height);
-            console.log("Stream bitrate: " + info.streams[i].bitrate);
-            console.log("Stream sample rate: " + info.streams[i].sampleRate);
-            console.log(
-              "Stream sample format: " + info.streams[i].sampleFormat
-            );
-            console.log(
-              "Stream channel layout: " + info.streams[i].channelLayout
-            );
-            console.log("Stream sar: " + info.streams[i].sampleAspectRatio);
-            console.log("Stream dar: " + info.streams[i].displayAspectRatio);
-            console.log(
-              "Stream average frame rate: " + info.streams[i].averageFrameRate
-            );
-            console.log(
-              "Stream real frame rate: " + info.streams[i].realFrameRate
-            );
-            console.log("Stream time base: " + info.streams[i].timeBase);
-            console.log(
-              "Stream codec time base: " + info.streams[i].codecTimeBase
-            );
+      this.props.VidCamData({ prop: "videoData", value: { uri: info.path } });
+      if (info.streams) {
+        for (var i = 0; i < info.streams.length; i++) {
+          console.log("Stream id: " + info.streams[i].index);
+          console.log("Stream type: " + info.streams[i].type);
+          console.log("Stream codec: " + info.streams[i].codec);
+          console.log("Stream full codec: " + info.streams[i].fullCodec);
+          console.log("Stream format: " + info.streams[i].format);
+          console.log("Stream full format: " + info.streams[i].fullFormat);
+          console.log("Stream width: " + info.streams[i].width);
+          console.log("Stream height: " + info.streams[i].height);
+          console.log("Stream bitrate: " + info.streams[i].bitrate);
+          console.log("Stream sample rate: " + info.streams[i].sampleRate);
+          console.log("Stream sample format: " + info.streams[i].sampleFormat);
+          console.log(
+            "Stream channel layout: " + info.streams[i].channelLayout
+          );
+          console.log("Stream sar: " + info.streams[i].sampleAspectRatio);
+          console.log("Stream dar: " + info.streams[i].displayAspectRatio);
+          console.log(
+            "Stream average frame rate: " + info.streams[i].averageFrameRate
+          );
+          console.log(
+            "Stream real frame rate: " + info.streams[i].realFrameRate
+          );
+          console.log("Stream time base: " + info.streams[i].timeBase);
+          console.log(
+            "Stream codec time base: " + info.streams[i].codecTimeBase
+          );
 
-            if (info.streams[i].metadata) {
-              console.log(
-                "Stream metadata encoder: " + info.streams[i].metadata.encoder
-              );
-              console.log(
-                "Stream metadata rotate: " + info.streams[i].metadata.rotate
-              );
-              console.log(
-                "Stream metadata creation time: " +
-                  info.streams[i].metadata.creation_time
-              );
-              console.log(
-                "Stream metadata handler name: " +
-                  info.streams[i].metadata.handler_name
-              );
-            }
+          if (info.streams[i].metadata) {
+            console.log(
+              "Stream metadata encoder: " + info.streams[i].metadata.encoder
+            );
+            console.log(
+              "Stream metadata rotate: " + info.streams[i].metadata.rotate
+            );
+            console.log(
+              "Stream metadata creation time: " +
+                info.streams[i].metadata.creation_time
+            );
+            console.log(
+              "Stream metadata handler name: " +
+                info.streams[i].metadata.handler_name
+            );
+          }
 
-            if (info.streams[i].sidedata) {
-              console.log(
-                "Stream side data displaymatrix: " +
-                  info.streams[i].sidedata.displaymatrix
-              );
-            }
+          if (info.streams[i].sidedata) {
+            console.log(
+              "Stream side data displaymatrix: " +
+                info.streams[i].sidedata.displaymatrix
+            );
           }
         }
-        console.log("\n");
       }
-    );
+      console.log("\n");
+    });
   };
 
   createVideo = recordedVideo => {
@@ -299,10 +297,10 @@ class RecordingScreen extends PureComponent {
   };
 
   createFilter = video => {
-    let videoPath = RNFS.CachesDirectoryPath + "/video2.mp4";
+    let videoPath = RNFS.CachesDirectoryPath + "/video76.mp4";
 
-    VideoUtil.resourcePath("colosseum.jpg").then(image => {
-      console.log("Saved resource colosseum.jpg to " + image);
+    VideoUtil.resourcePath("mic1.png").then(image => {
+      console.log("Saved resource mic2.png to " + image);
 
       let ffmpegCommand =
         "-i " +
@@ -361,6 +359,46 @@ class RecordingScreen extends PureComponent {
           />
         </View>
       );
+    }
+  };
+
+  renderFilterImage = () => {
+    const {
+      selectedPreview,
+      selectedIndex,
+      interviewFilters,
+      newsFilters,
+      selectFilter
+    } = this.props;
+
+    if (selectedPreview) {
+      if (selectedPreview === "interview") {
+        if (interviewFilters[selectedIndex].uri) {
+          console.log("hehehehehehh");
+          console.log(interviewFilters[selectedIndex]);
+          return (
+            <View
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "39%",
+                flex: 1,
+                zIndex: 2000,
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <Image
+                source={interviewFilters[selectedIndex].uri}
+                resizeMode="contain"
+                style={{ height: 100, width: 100, flex: 1 }}
+              />
+            </View>
+          );
+        } else return null;
+      }
+    } else {
+      return null;
     }
   };
 
@@ -466,12 +504,13 @@ class RecordingScreen extends PureComponent {
           onGoogleVisionBarcodesDetected={({ barcodes }) => {
             console.log(barcodes);
           }}
-          onFacesDetected={values => {
-            // console.log(values, "values");
-            onFaceDetected(values);
-          }}
-          faceDetectionMode={RNCamera.Constants.FaceDetection.Mode.accurate}
+          // onFacesDetected={values => {
+          //   // console.log(values, "values");
+          //   onFaceDetected(values);
+          // }}
+          // faceDetectionMode={RNCamera.Constants.FaceDetection.Mode.accurate}
         />
+        {this.renderFilterImage()}
         <View style={styles.filterContainer}>
           <FilterPreview />
         </View>
@@ -628,7 +667,12 @@ const mapStateToProps = state => {
     recording: state.RecordingReducer.recording,
     faceDetectedDetails: state.RecordingReducer.faceDetectedDetails,
     videoData: state.RecordingReducer.videoData,
-    cameraData: state.RecordingReducer.cameraData
+    cameraData: state.RecordingReducer.cameraData,
+    selectedPreview: state.FilterPreviewReducer.selectedPreview,
+    interviewFilters: state.FilterPreviewReducer.interviewFilters,
+    newsFilters: state.FilterPreviewReducer.newsFilters,
+    selectedIndex: state.FilterPreviewReducer.selectedIndex,
+    selectedFilter: state.FilterPreviewReducer.selectedFilter
   };
 };
 
