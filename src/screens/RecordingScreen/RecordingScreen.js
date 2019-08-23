@@ -31,6 +31,7 @@ import { VideoUtil } from "../../utils/VideoUtil";
 import RNFS from "react-native-fs";
 import Modal from "react-native-modal";
 import randomString from "random-string";
+import Spinner from "react-native-spinkit";
 
 async function execute(command) {
   await RNFFmpeg.execute(command).then(result =>
@@ -48,7 +49,9 @@ class RecordingScreen extends PureComponent {
   state = {
     recording: false,
     processing: false,
-    filterMenu: false
+    modalVisible: false,
+    filterMenu: false,
+    videoUri: null
   };
 
   async startRecording() {
@@ -60,13 +63,9 @@ class RecordingScreen extends PureComponent {
     console.log(codec);
   }
 
-  componentDidMount() {
-    // console.log(randomString({ length: 5 }));
-  }
-
   stopRecording() {
     this.camera.stopRecording();
-    this.props.navigation.navigate("Recorded", {});
+    this.setState({ processing: true, modalVisible: true });
   }
 
   renderFlashIcon = () => {};
@@ -112,17 +111,26 @@ class RecordingScreen extends PureComponent {
   takeVideo = async () => {
     const { extensionName } = this.props;
     if (this.camera) {
-      const options = { quality: "420px", maxDuration: 60 };
-      const data = await this.camera.recordAsync(options);
-
+      const options = {
+        quality: RNCamera.Constants.VideoQuality["1080p"],
+        maxDuration: 60
+      };
+      this.camera
+        .recordAsync(options)
+        .then(data => {
+          this.createFilter(data.uri);
+        })
+        .catch(() => {
+          console.log("error saving video");
+        });
+      // this.setState({ videoUri: data });
+      // this.camera.stopRecording();
       extensionName(randomString({ length: 5 }));
-      this.setState({ processing: true });
-      this.createFilter(data.uri);
     }
   };
 
   logCallback = logData => {
-    this.setState({ encodeOutput: this.state.encodeOutput + logData.log });
+    // this.setState({ encodeOutput: this.state.encodeOutput + logData.log });
   };
 
   statisticsCallback = statisticsData => {
@@ -165,7 +173,10 @@ class RecordingScreen extends PureComponent {
         prop: "videoData",
         value: { uri: info.path }
       });
-      this.setState({ processing: true });
+      this.setState({ processing: true, modalVisible: false });
+      setTimeout(() => {
+        this.props.navigation.navigate("Recorded", {});
+      }, 300);
       // if (info.streams) {
       //   for (var i = 0; i < info.streams.length; i++) {
       //     console.log("Stream id: " + info.streams[i].index);
@@ -277,35 +288,6 @@ class RecordingScreen extends PureComponent {
       });
   };
 
-  renderFaceDetect = () => {
-    const { faceDetectedDetails } = this.props;
-
-    // console.log(faceDetectedDetails.length, "details");
-    // if (faceDetectedDetails) {
-    //   let faceSize = faceDetectedDetails.faces[0].bounds.size;
-    //   let facePosition = faceDetectedDetails.faces[0].bounds.origin;
-
-    //   console.log(facePosition.y, facePosition.x, "sizes");
-    //   return (
-    //     <View
-    //       style={{
-    //         height: faceSize.height,
-    //         width: faceSize.width,
-    //         backgroundColor: "red",
-    //         position: "absolute",
-    //         top: facePosition.y,
-    //         left: facePosition.x - 70
-    //       }}
-    //     >
-    //       <Text>Filter image filters would be here </Text>
-    //     </View>
-    //   );
-    // } else {
-    // }
-
-    return null;
-  };
-
   createFilter = video => {
     const { extName } = this.props;
     let videoPath = RNFS.CachesDirectoryPath + `/${extName}.mp4`;
@@ -330,8 +312,6 @@ class RecordingScreen extends PureComponent {
           console.log(error, "error");
         });
     });
-
-    // RNFFmpeg.execute('-i '+ +' -i ' ++ '-filter_complex "overlay=10:10"' ).then(result => console.log("FFmpeg process exited with rc " + result));
   };
 
   renderFilterMenu = () => {
@@ -428,9 +408,25 @@ class RecordingScreen extends PureComponent {
     } = this.props;
     return (
       <View style={styles.container}>
-        <Modal isVisible={true}>
-          <View style={{ backgroundColor: "#fff", height: "20%" }}>
-            <Text>I am the modal content!</Text>
+        <Modal isVisible={this.state.modalVisible}>
+          <View
+            style={{
+              backgroundColor: "#fff",
+              height: "20%",
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 10
+            }}
+          >
+            <Spinner
+              style={styles.spinner}
+              isVisible={true}
+              size={50}
+              type={"Circle"}
+            />
+            <Text style={{ fontWeight: "500", margin: 10, fontSize: 15 }}>
+              Please wait while we process your video!
+            </Text>
           </View>
         </Modal>
         <View style={styles.headerContainer}>
@@ -445,7 +441,11 @@ class RecordingScreen extends PureComponent {
               color="#fff"
               name={flash ? "md-flash" : "md-flash-off"}
               size={25}
-              onPress={() => toggleFlash(flash)}
+              onPress={() => {
+                if (!recording) {
+                  toggleFlash(flash);
+                }
+              }}
             />
           </View>
           <View
@@ -477,11 +477,13 @@ class RecordingScreen extends PureComponent {
               name="md-menu"
               size={25}
               onPress={() => {
-                this.setState({
-                  ...this.state,
-                  filterMenu: !this.state.filterMenu
-                });
-                toggleFilterPreview(null);
+                if (!recording) {
+                  this.setState({
+                    ...this.state,
+                    filterMenu: !this.state.filterMenu
+                  });
+                  toggleFilterPreview(null);
+                }
               }}
             />
           </View>
@@ -509,11 +511,6 @@ class RecordingScreen extends PureComponent {
           onGoogleVisionBarcodesDetected={({ barcodes }) => {
             console.log(barcodes);
           }}
-          // onFacesDetected={values => {
-          //   // console.log(values, "values");
-          //   onFaceDetected(values);
-          // }}
-          // faceDetectionMode={RNCamera.Constants.FaceDetection.Mode.accurate}
         />
         {this.renderFilterImage()}
         <View style={styles.filterContainer}>
@@ -533,6 +530,7 @@ class RecordingScreen extends PureComponent {
                 name={"stop-circle"}
                 size={35}
                 onPress={() => {
+                  console.log(this.state.videoUri);
                   startStopRecording(recording);
                   this.stopRecording();
                 }}
@@ -540,24 +538,27 @@ class RecordingScreen extends PureComponent {
             ) : null}
           </View>
           <TouchableOpacity
+            onPress={() => {
+              if (!recording) {
+                if (!videoData) {
+                  this.takePicture();
+                }
+              }
+            }}
+            onLongPress={() => {
+              if (!recording) {
+                if (!cameraData) {
+                  this.takeVideo();
+                  startStopRecording(recording);
+                }
+              }
+            }}
             // onPress={() => {
-            //   if (!videoData) {
-            //     this.takePicture();
-            //   }
-            // }}
-
-            // onLongPress={() => {
             //   if (!cameraData) {
             //     this.takeVideo();
             //     startStopRecording(recording);
             //   }
             // }}
-            onPress={() => {
-              if (!cameraData) {
-                this.takeVideo();
-                startStopRecording(recording);
-              }
-            }}
             delayLongPress={1500}
           >
             <View
@@ -582,13 +583,14 @@ class RecordingScreen extends PureComponent {
               color="#fff"
               name="spinner-refresh"
               onPress={() => {
-                toggleCamera(frontCamera);
+                if (!recording) {
+                  toggleCamera(frontCamera);
+                }
               }}
               size={25}
             />
           </View>
         </View>
-        {/* {this.renderFaceDetect()} */}
       </View>
     );
   }

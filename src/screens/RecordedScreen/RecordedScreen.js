@@ -55,7 +55,7 @@ class RecordedScreen extends Component {
 
   // video ends
   onEnd = () => {
-    this.setState({ paused: true });
+    this.setState({ paused: true, moveable: true });
   };
 
   getCurrentTimePercentage() {
@@ -243,7 +243,7 @@ class RecordedScreen extends Component {
               this.setState({ paused: false });
             }}
             onPause={() => {
-              this.setState({ paused: true });
+              this.setState({ paused: true, moveable: true });
             }}
           />
         ) : (
