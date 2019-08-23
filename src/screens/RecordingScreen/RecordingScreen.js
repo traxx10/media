@@ -91,6 +91,7 @@ class RecordingScreen extends PureComponent {
   };
 
   takePicture = async () => {
+    const { extensionName, selectedFilter } = this.props;
     if (this.camera) {
       const options = {
         quality: 1,
@@ -98,13 +99,37 @@ class RecordingScreen extends PureComponent {
         fixOrientation: true,
         forceUpOrientation: true
       };
-      const data = await this.camera.takePictureAsync(options);
-      console.log(data.uri);
-      this.props.VidCamData({ prop: "cameraData", value: data });
-      this.props.navigation.navigate("Preview");
-      // this.props.navigation.navigate("Recorded", {
-      //   // name: "Brent"
-      // });
+      // const data = await this.camera.takePictureAsync(options);
+      // console.log(data.uri);
+      // this.props.VidCamData({ prop: "cameraData", value: data });
+      // this.props.navigation.navigate("Preview");
+
+      this.camera
+        .takePictureAsync(options)
+        .then(data => {
+          if (selectedFilter) {
+            this.createImageFilter(data.uri);
+          } else {
+            this.props.VidCamData({
+              prop: "cameraData",
+              value: { uri: data.uri }
+            });
+
+            setTimeout(() => {
+              this.setState({
+                processing: false,
+                modalVisible: false
+              });
+              this.props.navigation.navigate("Preview");
+              // this.props.navigation.navigate("Recorded", {});
+            }, 1500);
+          }
+        })
+        .catch(() => {
+          console.log("error saving video");
+        });
+
+      extensionName(randomString({ length: 5 }));
     }
   };
 
@@ -169,7 +194,7 @@ class RecordingScreen extends PureComponent {
     );
   };
 
-  getMediaInformation = () => {
+  getMediaInformation = type => {
     const { extName } = this.props;
 
     RNFFmpeg.getMediaInformation(
@@ -184,14 +209,26 @@ class RecordingScreen extends PureComponent {
       console.log("Start time: " + info.startTime);
       console.log("Bitrate: " + info.bitrate);
 
-      this.props.VidCamData({
-        prop: "videoData",
-        value: { uri: info.path }
-      });
-      this.setState({ processing: false, modalVisible: false });
-      setTimeout(() => {
-        this.props.navigation.navigate("Recorded", {});
-      }, 200);
+      if (type === "video") {
+        this.props.VidCamData({
+          prop: "videoData",
+          value: { uri: info.path }
+        });
+        this.setState({ processing: false, modalVisible: false });
+        setTimeout(() => {
+          this.props.navigation.navigate("Recorded", {});
+        }, 200);
+      } else {
+        this.props.VidCamData({
+          prop: "cameraData",
+          value: { uri: info.path }
+        });
+        this.setState({ processing: false, modalVisible: false });
+        setTimeout(() => {
+          this.props.navigation.navigate("Preview", {});
+        }, 200);
+      }
+
       // if (info.streams) {
       //   for (var i = 0; i < info.streams.length; i++) {
       //     console.log("Stream id: " + info.streams[i].index);
@@ -321,7 +358,33 @@ class RecordingScreen extends PureComponent {
       RNFFmpeg.execute(ffmpegCommand)
         .then(result => {
           console.log("succ ");
-          this.getMediaInformation();
+          this.getMediaInformation("video");
+        })
+        .catch(error => {
+          console.log(error, "error");
+        });
+    });
+  };
+
+  createImageFilter = cameraImage => {
+    const { extName, selectedFilter } = this.props;
+    let imagePath = RNFS.CachesDirectoryPath + `/${extName}.mp4`;
+
+    VideoUtil.resourcePath(selectedFilter).then(image => {
+      console.log("Saved resource mic2.png to " + image);
+
+      let ffmpegCommand =
+        "-i " +
+        cameraImage +
+        " -i " +
+        image +
+        " -filter_complex overlay=x=(main_w-overlay_w)/2:y=(main_h-overlay_h)/2 " +
+        imagePath;
+
+      RNFFmpeg.execute(ffmpegCommand)
+        .then(result => {
+          console.log("succ ");
+          this.getMediaInformation("camera");
         })
         .catch(error => {
           console.log(error, "error");
@@ -556,13 +619,13 @@ class RecordingScreen extends PureComponent {
             ) : null}
           </View>
           <TouchableOpacity
-            // onPress={() => {
-            //   if (!recording) {
-            //     if (!videoData) {
-            //       this.takePicture();
-            //     }
-            //   }
-            // }}
+            onPress={() => {
+              if (!recording) {
+                if (!videoData) {
+                  this.takePicture();
+                }
+              }
+            }}
             onLongPress={() => {
               if (!recording) {
                 if (!cameraData) {
@@ -571,12 +634,12 @@ class RecordingScreen extends PureComponent {
                 }
               }
             }}
-            onPress={() => {
-              if (!cameraData) {
-                this.takeVideo();
-                startStopRecording(recording);
-              }
-            }}
+            // onPress={() => {
+            //   if (!cameraData) {
+            //     this.takeVideo();
+            //     startStopRecording(recording);
+            //   }
+            // }}
             delayLongPress={1500}
           >
             <View
