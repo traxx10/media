@@ -109,7 +109,7 @@ class RecordingScreen extends PureComponent {
   };
 
   takeVideo = async () => {
-    const { extensionName } = this.props;
+    const { extensionName, selectedFilter } = this.props;
     if (this.camera) {
       const options = {
         quality: RNCamera.Constants.VideoQuality["1080p"],
@@ -118,7 +118,22 @@ class RecordingScreen extends PureComponent {
       this.camera
         .recordAsync(options)
         .then(data => {
-          this.createFilter(data.uri);
+          if (selectedFilter) {
+            this.createFilter(data.uri);
+          } else {
+            this.props.VidCamData({
+              prop: "videoData",
+              value: { uri: data.uri }
+            });
+
+            setTimeout(() => {
+              this.setState({
+                processing: false,
+                modalVisible: false
+              });
+              this.props.navigation.navigate("Recorded", {});
+            }, 1500);
+          }
         })
         .catch(() => {
           console.log("error saving video");
@@ -173,10 +188,10 @@ class RecordingScreen extends PureComponent {
         prop: "videoData",
         value: { uri: info.path }
       });
-      this.setState({ processing: true, modalVisible: false });
+      this.setState({ processing: false, modalVisible: false });
       setTimeout(() => {
         this.props.navigation.navigate("Recorded", {});
-      }, 300);
+      }, 200);
       // if (info.streams) {
       //   for (var i = 0; i < info.streams.length; i++) {
       //     console.log("Stream id: " + info.streams[i].index);
@@ -289,10 +304,10 @@ class RecordingScreen extends PureComponent {
   };
 
   createFilter = video => {
-    const { extName } = this.props;
+    const { extName, selectedFilter } = this.props;
     let videoPath = RNFS.CachesDirectoryPath + `/${extName}.mp4`;
 
-    VideoUtil.resourcePath("mic1.png").then(image => {
+    VideoUtil.resourcePath(selectedFilter).then(image => {
       console.log("Saved resource mic2.png to " + image);
 
       let ffmpegCommand =
@@ -513,9 +528,12 @@ class RecordingScreen extends PureComponent {
           }}
         />
         {this.renderFilterImage()}
-        <View style={styles.filterContainer}>
-          <FilterPreview />
-        </View>
+        {recording ? null : (
+          <View style={styles.filterContainer}>
+            <FilterPreview />
+          </View>
+        )}
+
         <View style={styles.footerContainer}>
           <View
             style={{
@@ -538,13 +556,13 @@ class RecordingScreen extends PureComponent {
             ) : null}
           </View>
           <TouchableOpacity
-            onPress={() => {
-              if (!recording) {
-                if (!videoData) {
-                  this.takePicture();
-                }
-              }
-            }}
+            // onPress={() => {
+            //   if (!recording) {
+            //     if (!videoData) {
+            //       this.takePicture();
+            //     }
+            //   }
+            // }}
             onLongPress={() => {
               if (!recording) {
                 if (!cameraData) {
@@ -553,12 +571,12 @@ class RecordingScreen extends PureComponent {
                 }
               }
             }}
-            // onPress={() => {
-            //   if (!cameraData) {
-            //     this.takeVideo();
-            //     startStopRecording(recording);
-            //   }
-            // }}
+            onPress={() => {
+              if (!cameraData) {
+                this.takeVideo();
+                startStopRecording(recording);
+              }
+            }}
             delayLongPress={1500}
           >
             <View

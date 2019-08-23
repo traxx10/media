@@ -112,6 +112,7 @@ PODS:
   - GTMSessionFetcher/Core (1.2.2)
   - GTMSessionFetcher/Full (1.2.2):
     - GTMSessionFetcher/Core (= 1.2.2)
+  - mobile-ffmpeg-https (4.2.2)
   - nanopb (0.3.901):
     - nanopb/decode (= 0.3.901)
     - nanopb/encode (= 0.3.901)
@@ -190,6 +191,14 @@ PODS:
     - React
     - react-native-camera/RCT
     - react-native-camera/RN
+  - react-native-ffmpeg (0.3.5):
+    - React
+    - react-native-ffmpeg/https (= 0.3.5)
+  - react-native-ffmpeg/https (0.3.5):
+    - mobile-ffmpeg-https (= 4.2.2)
+    - React
+  - react-native-spinkit (1.0.2):
+    - React
   - react-native-video (5.0.0):
     - React
     - react-native-video/Video (= 5.0.0)
@@ -254,6 +263,8 @@ DEPENDENCIES:
   - react-native-camera/BarcodeDetectorMLKit (from `../node_modules/react-native-camera`)
   - react-native-camera/FaceDetectorMLKit (from `../node_modules/react-native-camera`)
   - react-native-camera/TextDetector (from `../node_modules/react-native-camera`)
+  - react-native-ffmpeg (from `../node_modules/react-native-ffmpeg/ios`)
+  - react-native-spinkit (from `../node_modules/react-native-spinkit`)
   - react-native-video (from `../node_modules/react-native-video/react-native-video.podspec`)
   - react-native-video/VideoCaching (from `../node_modules/react-native-video/react-native-video.podspec`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -292,6 +303,7 @@ SPEC REPOS:
     - GoogleToolboxForMac
     - GoogleUtilities
     - GTMSessionFetcher
+    - mobile-ffmpeg-https
     - nanopb
     - Protobuf
     - SPTPersistentCache
@@ -321,6 +333,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-camera:
     :path: "../node_modules/react-native-camera"
+  react-native-ffmpeg:
+    :path: "../node_modules/react-native-ffmpeg/ios"
+  react-native-spinkit:
+    :path: "../node_modules/react-native-spinkit"
   react-native-video:
     :path: "../node_modules/react-native-video/react-native-video.podspec"
   React-RCTActionSheet:
@@ -377,6 +393,7 @@ SPEC CHECKSUMS:
   GoogleToolboxForMac: b3553629623a3b1bff17f555e736cd5a6d95ad55
   GoogleUtilities: c7a0b08bda3bf808be823ed151f0e28ac6866e71
   GTMSessionFetcher: 61bb0f61a4cb560030f1222021178008a5727a23
+  mobile-ffmpeg-https: 9474e6e0958b6c12d981073d81a3b9484da02f48
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   Protobuf: 3f617b9a6e73605565086864c9bc26b2bf2dd5a3
   React: c438ccc7e14e86d4702bb92d7e262f549ffaa995
@@ -388,6 +405,8 @@ SPEC CHECKSUMS:
   React-jsiexecutor: e4b4717060a0cd8d0270323b5655a68c95432efd
   React-jsinspector: 044105eea064aec81adc5e4d777a8f6589e7d094
   react-native-camera: 9c50d7def800895e7991ccda6203929553ceec9c
+  react-native-ffmpeg: d90850e41764deaa40fa16596d335348a67bdb11
+  react-native-spinkit: c9f5826e1a0bf0da889b3795278eb96ae15c1350
   react-native-video: 44c6befbc1526283ca1919891fcebe4680feade4
   React-RCTActionSheet: 08864c609d9f959abf3d51fdd93f8bc6e91f21eb
   React-RCTAnimation: a4547e9fac2627ded3df9d302f5558b475faf819
@@ -407,6 +426,6 @@ SPEC CHECKSUMS:
   SPTPersistentCache: df36ea46762d7cf026502bbb86a8b79d0080dff4
   yoga: 88c514f310aff89b94a14c5fbf44b95735af0cb7
 
-PODFILE CHECKSUM: 5ab2e2a3e9f14c2fa9dd25b9e8fa098c68337490
+PODFILE CHECKSUM: 4aae7ac484b5b5e38d68de61b9cf73b58dd5728b
 
 COCOAPODS: 1.5.3
