@@ -25,7 +25,6 @@ import {
   toggleFilterPreview,
   extensionName
 } from "../../actions";
-import Sticker1 from "../../assets/stickers/sticker1.svg";
 import FilterPreview from "../../components/FilterPreview/FilterPreview";
 import { LogLevel, RNFFmpeg } from "react-native-ffmpeg";
 import { VideoUtil } from "../../utils/VideoUtil";
@@ -112,19 +111,16 @@ class RecordingScreen extends PureComponent {
           if (selectedFilter) {
             this.createImageFilter(data);
           } else {
-            this.props.VidCamData({
-              prop: "cameraData",
-              value: { uri: data }
-            });
+            this.props.VidCamData({ prop: "cameraData", value: data });
 
-            setTimeout(() => {
-              this.setState({
-                processing: false,
-                modalVisible: false
-              });
-              this.props.navigation.navigate("Preview");
-              // this.props.navigation.navigate("Recorded", {});
-            }, 1500);
+            // setTimeout(() => {
+            this.setState({
+              processing: false,
+              modalVisible: false
+            });
+            this.props.navigation.navigate("Preview");
+            // this.props.navigation.navigate("Recorded", {});
+            // }, 200);
           }
         })
         .catch(error => {
@@ -200,7 +196,7 @@ class RecordingScreen extends PureComponent {
     const { extName } = this.props;
 
     RNFFmpeg.getMediaInformation(
-      RNFS.CachesDirectoryPath + `/${extName}.png`
+      RNFS.CachesDirectoryPath + `/${extName}.mp4`
     ).then(info => {
       // console.log("\n");
       // console.log("Result: " + JSON.stringify(info));

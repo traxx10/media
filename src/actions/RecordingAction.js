@@ -4,7 +4,8 @@ import {
   ON_FACE_DETECTED,
   START_STOP_RECORDING,
   VIDEO_CAMERA_DATA,
-  EXTENSION_NAME
+  EXTENSION_NAME,
+  RESET_RECORDING_REDUCER
 } from "./types";
 
 export const toggleFlash = state => {
@@ -57,6 +58,14 @@ export const extensionName = data => {
     dispatch({
       type: EXTENSION_NAME,
       payload: data
+    });
+  };
+};
+
+export const resetReducer = () => {
+  return dispatch => {
+    dispatch({
+      type: RESET_RECORDING_REDUCER
     });
   };
 };

@@ -1,6 +1,7 @@
 import {
   TOGGLE_SELECTED_FILTER_PREVIEW,
-  SELECT_FILTER
+  SELECT_FILTER,
+  RESET_FILTER_REDUCER
 } from "../actions/types";
 
 const INITIAL_STATE = {
@@ -61,6 +62,9 @@ export default (state = INITIAL_STATE, action) => {
         interviewFilters: action.updatedFilter,
         selectedIndex: action.selectedIndex
       };
+
+    case RESET_FILTER_REDUCER:
+      return INITIAL_STATE;
     default:
       return state;
   }

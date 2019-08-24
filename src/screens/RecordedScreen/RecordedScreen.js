@@ -17,7 +17,7 @@ import { Button, Avatar } from "react-native-elements";
 import { Thumbnail } from "react-native-thumbnail-video";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Entypo from "react-native-vector-icons/Entypo";
-import { VidCamData } from "../../actions";
+import { VidCamData, resetReducer, resetFilterReducer } from "../../actions";
 import MovableView from "react-native-movable-view";
 import { LogLevel, RNFFmpeg } from "react-native-ffmpeg";
 
@@ -131,7 +131,12 @@ class RecordedScreen extends Component {
   }
 
   render() {
-    const { videoData, cameraData } = this.props;
+    const {
+      videoData,
+      cameraData,
+      resetReducer,
+      resetFilterReducer
+    } = this.props;
     const { paused } = this.state;
 
     if (videoData) {
@@ -144,6 +149,8 @@ class RecordedScreen extends Component {
           <View style={styles.headerContainer}>
             <TouchableWithoutFeedback
               onPress={() => {
+                resetReducer();
+                resetFilterReducer();
                 this.props.VidCamData({
                   prop: "VideoData",
                   value: null
@@ -385,5 +392,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { VidCamData }
+  { VidCamData, resetReducer, resetFilterReducer }
 )(RecordedScreen);

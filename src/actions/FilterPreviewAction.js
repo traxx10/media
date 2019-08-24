@@ -1,4 +1,8 @@
-import { TOGGLE_SELECTED_FILTER_PREVIEW, SELECT_FILTER } from "./types";
+import {
+  TOGGLE_SELECTED_FILTER_PREVIEW,
+  SELECT_FILTER,
+  RESET_FILTER_REDUCER
+} from "./types";
 
 export const toggleFilterPreview = value => {
   return dispatch => {
@@ -30,6 +34,14 @@ export const selectFilter = (filters, value, selectedIndex) => {
       payload: value,
       updatedFilter,
       selectedIndex
+    });
+  };
+};
+
+export const resetFilterReducer = () => {
+  return dispatch => {
+    dispatch({
+      type: RESET_FILTER_REDUCER
     });
   };
 };

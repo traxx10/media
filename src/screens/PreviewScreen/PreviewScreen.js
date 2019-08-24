@@ -12,7 +12,7 @@ import { Button, Avatar } from "react-native-elements";
 import { connect } from "react-redux";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Entypo from "react-native-vector-icons/Entypo";
-import { VidCamData } from "../../actions";
+import { VidCamData, resetReducer, resetFilterReducer } from "../../actions";
 import MovableView from "react-native-movable-view";
 
 class PreviewScreen extends Component {
@@ -25,7 +25,12 @@ class PreviewScreen extends Component {
   }
 
   render() {
-    const { cameraData, videoData } = this.props;
+    const {
+      cameraData,
+      videoData,
+      resetReducer,
+      resetFilterReducer
+    } = this.props;
     return (
       <View style={styles.container}>
         {/* <Image
@@ -42,6 +47,8 @@ class PreviewScreen extends Component {
         <View style={styles.headerContainer}>
           <TouchableWithoutFeedback
             onPress={() => {
+              resetReducer();
+              resetFilterReducer();
               this.props.VidCamData({
                 prop: "cameraData",
                 value: null
@@ -220,5 +227,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { VidCamData }
+  { VidCamData, resetReducer, resetFilterReducer }
 )(PreviewScreen);

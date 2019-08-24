@@ -4,7 +4,8 @@ import {
   ON_FACE_DETECTED,
   START_STOP_RECORDING,
   VIDEO_CAMERA_DATA,
-  EXTENSION_NAME
+  EXTENSION_NAME,
+  RESET_RECORDING_REDUCER
 } from "../actions/types";
 
 const INITIAL_STATE = {
@@ -36,6 +37,9 @@ export default (state = INITIAL_STATE, action) => {
 
     case EXTENSION_NAME:
       return { ...state, extName: action.payload };
+
+    case RESET_RECORDING_REDUCER:
+      return INITIAL_STATE;
 
     default:
       return state;
