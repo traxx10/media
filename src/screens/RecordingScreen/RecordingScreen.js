@@ -6,7 +6,8 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   ImageBackground,
-  Image
+  Image,
+  Platform
 } from "react-native";
 import { RNCamera } from "react-native-camera";
 import { connect } from "react-redux";
@@ -32,6 +33,7 @@ import RNFS from "react-native-fs";
 import Modal from "react-native-modal";
 import randomString from "random-string";
 import Spinner from "react-native-spinkit";
+import ImageMarker from "react-native-image-marker";
 
 async function execute(command) {
   await RNFFmpeg.execute(command).then(result =>
@@ -108,11 +110,11 @@ class RecordingScreen extends PureComponent {
         .takePictureAsync(options)
         .then(data => {
           if (selectedFilter) {
-            this.createImageFilter(data.uri);
+            this.createImageFilter(data);
           } else {
             this.props.VidCamData({
               prop: "cameraData",
-              value: { uri: data.uri }
+              value: { uri: data }
             });
 
             setTimeout(() => {
@@ -125,8 +127,8 @@ class RecordingScreen extends PureComponent {
             }, 1500);
           }
         })
-        .catch(() => {
-          console.log("error saving video");
+        .catch(error => {
+          console.log("error saving video", error);
         });
 
       extensionName(randomString({ length: 5 }));
@@ -198,16 +200,16 @@ class RecordingScreen extends PureComponent {
     const { extName } = this.props;
 
     RNFFmpeg.getMediaInformation(
-      RNFS.CachesDirectoryPath + `/${extName}.mp4`
+      RNFS.CachesDirectoryPath + `/${extName}.png`
     ).then(info => {
-      console.log("\n");
-      console.log("Result: " + JSON.stringify(info));
-      console.log("Media Information");
-      console.log("Path: " + info.path);
-      console.log("Format: " + info.format);
-      console.log("Duration: " + info.duration);
-      console.log("Start time: " + info.startTime);
-      console.log("Bitrate: " + info.bitrate);
+      // console.log("\n");
+      // console.log("Result: " + JSON.stringify(info));
+      // console.log("Media Information");
+      // console.log("Path: " + info.path);
+      // console.log("Format: " + info.format);
+      // console.log("Duration: " + info.duration);
+      // console.log("Start time: " + info.startTime);
+      // console.log("Bitrate: " + info.bitrate);
 
       if (type === "video") {
         this.props.VidCamData({
@@ -219,6 +221,7 @@ class RecordingScreen extends PureComponent {
           this.props.navigation.navigate("Recorded", {});
         }, 200);
       } else {
+        console.log("info", info);
         this.props.VidCamData({
           prop: "cameraData",
           value: { uri: info.path }
@@ -367,29 +370,66 @@ class RecordingScreen extends PureComponent {
   };
 
   createImageFilter = cameraImage => {
-    const { extName, selectedFilter } = this.props;
-    let imagePath = RNFS.CachesDirectoryPath + `/${extName}.mp4`;
+    const {
+      extName,
+      selectedFilter,
+      interviewFilters,
+      selectedIndex
+    } = this.props;
 
-    VideoUtil.resourcePath(selectedFilter).then(image => {
-      console.log("Saved resource mic2.png to " + image);
-
-      let ffmpegCommand =
-        "-i " +
-        cameraImage +
-        " -i " +
-        image +
-        " -filter_complex overlay=x=(main_w-overlay_w)/2:y=(main_h-overlay_h)/2 " +
-        imagePath;
-
-      RNFFmpeg.execute(ffmpegCommand)
-        .then(result => {
-          console.log("succ ");
-          this.getMediaInformation("camera");
-        })
-        .catch(error => {
-          console.log(error, "error");
+    ImageMarker.markImage({
+      src: cameraImage.uri,
+      markerSrc: interviewFilters[selectedIndex].uri,
+      position: "center", // topLeft, topCenter,topRight, bottomLeft, bottomCenter , bottomRight, center
+      scale: 1,
+      markerScale: 0.5,
+      quality: 100
+    })
+      .then(path => {
+        this.props.VidCamData({
+          prop: "cameraData",
+          value: {
+            uri: Platform.OS === "android" ? "file://" + path : path
+          }
         });
-    });
+
+        setTimeout(() => {
+          this.props.navigation.navigate("Preview", {});
+        }, 200);
+        // this.setState({
+        //   uri: Platform.OS === "android" ? "file://" + path : path,
+        //   loading: false
+        // });
+      })
+      .catch(err => {
+        console.log(err, "err");
+        this.setState({
+          loading: false,
+          err
+        });
+      });
+    // let imagePath = RNFS.CachesDirectoryPath + `/${extName}.png`;
+
+    // VideoUtil.resourcePath(selectedFilter).then(image => {
+    //   console.log("Saved resource mic2.png to " + image);
+
+    //   let ffmpegCommand =
+    //     "-i " +
+    //     cameraImage.uri +
+    //     " -i " +
+    //     image +
+    //     " -filter_complex overlay=x=(main_w-overlay_w)/2:y=(main_h-overlay_h)/2 " +
+    //     imagePath;
+
+    //   RNFFmpeg.execute(ffmpegCommand)
+    //     .then(result => {
+    //       console.log("succ ");
+    //       this.getMediaInformation("camera");
+    //     })
+    //     .catch(error => {
+    //       console.log(error, "error");
+    //     });
+    // });
   };
 
   renderFilterMenu = () => {
@@ -443,8 +483,8 @@ class RecordingScreen extends PureComponent {
     if (selectedPreview) {
       if (selectedPreview === "interview") {
         if (interviewFilters[selectedIndex].uri) {
-          console.log("hehehehehehh");
-          console.log(interviewFilters[selectedIndex]);
+          // console.log("hehehehehehh");
+          // console.log(interviewFilters[selectedIndex]);
           return (
             <View
               style={{

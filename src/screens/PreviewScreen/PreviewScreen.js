@@ -126,7 +126,7 @@ class PreviewScreen extends Component {
               position: "relative"
             }}
             source={{
-              uri: cameraData
+              uri: cameraData.uri
             }}
           />
         ) : (
