@@ -29,6 +29,8 @@ target 'media' do
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
 
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
+  pod 'react-native-ffmpeg/full', :podspec => '../node_modules/react-native-ffmpeg/ios/react-native-ffmpeg.podspec'
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
   pod 'Firebase/Core'
